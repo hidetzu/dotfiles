@@ -1,4 +1,5 @@
 set nocompatible
+filetype off
 
 "vim起動時のみruntimepathにneobundle.vimを追加
 if has('vim_starting')
@@ -25,6 +26,11 @@ NeoBundleCheck
 
 filetype plugin indent on
 
+""" 基本設定
+" マシン固有の設定.vimrc.localに記載
+if filereadable(expand('$HOME/.vimrc.local'))
+  source $HOME/.vimrc.local
+endif
 
 
 "--------------------------------
@@ -32,7 +38,40 @@ filetype plugin indent on
 "--------------------------------
 " バックアップ/スワップファイルを作成する/しない
 set nobackup
-"set backspace=
+" swpファイルを作成しない
+set noswapfile
+" backspaceキーの挙動を設定する
+" indent : 行頭の空白の削除を許す
+" eol : 改行の削除を許す
+" start : 挿入モードの開始位置での削除を許す
+set backspace=indent,eol,start
+" 新しい行を直前の行と同じインデントにする
+set autoindent
+" Tab文字を画面上の見た目で何文字幅にするか設定
+set tabstop=4
+" cindentやautoindent時に挿入されるタブの幅
+set shiftwidth=4
+" タブの入力を空白文字に置き換える
+set expandtab
+
+"タブ、空白、改行の可視化
+set list
+set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
+
+"全角スペースをハイライト表示
+function! ZenkakuSpace()
+    highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
+endfunction
+   
+if has('syntax')
+  augroup ZenkakuSpace
+    autocmd!
+    autocmd ColorScheme       * call ZenkakuSpace()
+    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+  augroup END
+  call ZenkakuSpace()
+endif
+
 
 "--------------------------------
 " 検索
@@ -104,6 +143,27 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
+augroup vimrc_filetype
+  autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
+augroup END
+
+"grep makeは検索結果を常の表示する
+autocmd QuickFixCmdPost make,*grep* cwindow
+
+"Quickfixのウィンドウだけの場合には終了
+function s:QuickFix_Exit_OnlyWindow()
+  if winnr('$') == 1
+    if (getbufvar(winbufnr(0), '&buftype')) == 'quickfix'
+      quit
+    endif
+  endif
+endfunction
+autocmd WinEnter * call s:QuickFix_Exit_OnlyWindow()
+
 "-------------------------------
 " コマンド
 "-------------------------------
@@ -116,15 +176,25 @@ function! QuickfixFilenames()
   return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
 endfunction
 
+function! Scouter(file, ...)
+  let pat = '^\s*$\|^\s*"'
+  let lines = readfile(a:file)
+  if !a:0 || !a:1
+    let lines = split(substitute(join(lines, "\n"), '\n\s*\\', '', 'g'), "\n")
+  endif
+  return len(filter(lines,'v:val !~ pat'))
+endfunction
+command! -bar -bang -nargs=? -complete=file Scouter
+\        echo Scouter(empty(<q-args>) ? $MYVIMRC : expand(<q-args>), <bang>0)
+command! -bar -bang -nargs=? -complete=file GScouter
+\        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
+
 "-------------------------------
 " プラグインの設定
 "-------------------------------
 
 let g:neocomplcache_enable_at_startup = 1
 
-
 set pastetoggle=<f5>
 nmap <F8> :TagbarToggle<CR>
 vmap X y/<C-R>"<CR>
-
-runtime macros/matchit.vim
