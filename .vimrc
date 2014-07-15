@@ -56,13 +56,14 @@ set expandtab
 
 "タブ、空白、改行の可視化
 set list
-set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
+"set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
+set listchars=tab:>-
 
 "全角スペースをハイライト表示
 function! ZenkakuSpace()
     highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
 endfunction
-   
+
 if has('syntax')
   augroup ZenkakuSpace
     autocmd!
@@ -143,12 +144,42 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
+"vimrc_filetypeグループのautocommandをすべて削除する
+augroup vimrc_filetype
+  autocmd!
+augroup END
+
 augroup vimrc_filetype
   autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
+augroup END
+
+"myautocmdグループのautocommandをすべて削除する
+augroup myautocmd
+  autocmd!
+augroup END
+
+augroup myautocmd
+  autocmd VimEnter,WinEnter * match Error /\s\+$/
+augroup END
+
+" アクティブウィンドウに限りカーソル行(列)を強調する
+augroup vimrc_set_cursorline_only_active_window
+  autocmd!
+  autocmd VimEnter,BufWinEnter,WinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
+augroup END
+
+" インサートモードに入った時にカーソル行(列)の色を変更する
+augroup vimrc_change_cursorline_color
+  autocmd!
+  " インサートモードに入った時にカーソル行の色をブルーグリーンにする
+  autocmd InsertEnter * highlight CursorLine term=reverse | highlight CursorColumn term=reverse
+  " インサートモードを抜けた時にカーソル行の色を黒に近いダークグレーにする
+  autocmd InsertLeave * highlight CursorLine ctermbg=236  | highlight CursorColumn ctermbg=236
 augroup END
 
 "grep makeは検索結果を常の表示する
