@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 set nocompatible
 filetype off
 
@@ -85,7 +87,7 @@ set cindent
 
 
 "--------------------------------
-" 表示設定 
+" 表示設定
 "--------------------------------
 set number
 set title
@@ -113,7 +115,7 @@ set statusline+=/
 set statusline+=%L      "バッファの総行数
 set statusline+=,
 set statusline+=%c      "何列目にカーソルがあるか
-set statusline+=\ \ 
+set statusline+=\ \
 set statusline+=%P      "ファイル内の%での位置
 
 "カラー表示
@@ -127,7 +129,7 @@ colorscheme jellybeans
 "nnoremap <Leader>c :<C-u>setlocal cursorline! cursorcolumn!<CR>
 
 "--------------------------------
-" 文字コード 
+" 文字コード
 "--------------------------------
 set encoding=utf-8
 set fileencodings=utf-8,ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
@@ -153,6 +155,7 @@ augroup vimrc_filetype
   autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType lua        setlocal sw=2 sts=2 ts=2 et
   autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
 augroup END
@@ -182,11 +185,15 @@ augroup vimrc_change_cursorline_color
   autocmd InsertLeave * highlight CursorLine ctermbg=236  | highlight CursorColumn ctermbg=236
 augroup END
 
-"grep makeは検索結果を常の表示する
-autocmd QuickFixCmdPost make,*grep* cwindow
+" Quickfix
+augroup quickfixopen
+  autocmd!
+  "grep makeは検索結果を常の表示する
+  autocmd QuickFixCmdPost make,*grep* cwindow
+augroup END
 
 "Quickfixのウィンドウだけの場合には終了
-function s:QuickFix_Exit_OnlyWindow()
+function! s:QuickFix_Exit_OnlyWindow()
   if winnr('$') == 1
     if (getbufvar(winbufnr(0), '&buftype')) == 'quickfix'
       quit
@@ -220,12 +227,103 @@ command! -bar -bang -nargs=? -complete=file Scouter
 command! -bar -bang -nargs=? -complete=file GScouter
 \        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
 
+
+augroup myvimrc
+  nnoremap <Space>, :so $MYVIMRC<CR>
+  nnoremap <Space>. :sp $MYVIMRC<CR>
+augroup END
+
+
 "-------------------------------
 " プラグインの設定
 "-------------------------------
+if neobundle#is_installed('neocomplete')
+    " neocomplete用設定
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_ignore_case = 1
+    let g:neocomplete#enable_smart_case = 1
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns._ = '\h\w*'
+elseif neobundle#is_installed('neocomplcache')
+    " neocomplcache用設定
+    " 起動時に有効化
+    let g:neocomplcache_enable_at_startup = 1
+    " 大文字が入力されるまで大文字小文字の区別を無視する
+    let g:neocomplcache_enable_smart_case = 1
+    " _(アンダースコア)区切りの補完を有効化
+    let g:neocomplcache_enable_underbar_completion = 1
+    let g:neocomplcache_enable_camel_case_completion  =  1
+    " ポップアップメニューで表示される候補の数
+    let g:neocomplcache_max_list = 20
+    " シンタックスをキャッシュするときの最小文字長
+    let g:neocomplcache_min_syntax_length = 3
+    " ディクショナリ定義
+    let g:neocomplcache_dictionary_filetype_lists = {
+          \ 'default' : '',
+          \ }
+    if !exists('g:neocomplcache_keyword_patterns')
+      let g:neocomplcache_keyword_patterns = {}
+    endif
+    let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-let g:neocomplcache_enable_at_startup = 1
+    " スニペットを展開する。スニペットが関係しないところでは行末まで削除
+    imap <expr><C-k> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "\<C-o>D"
+    smap <expr><C-k> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "\<C-o>D"
+    " 前回行われた補完をキャンセルします
+    inoremap <expr><C-g> neocomplcache#undo_completion()
+    " 補完候補のなかから、共通する部分を補完します
+    inoremap <expr><C-l> neocomplcache#complete_common_string()
+    " 改行で補完ウィンドウを閉じる
+    inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
+    "tabで補完候補の選択を行う
+    inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
+    inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
+    " <C-h>や<BS>を押したときに確実にポップアップを削除します
+    inoremap <expr><C-h> neocomplcache#smart_close_popup().”\<C-h>”
+    " 現在選択している候補を確定します
+    inoremap <expr><C-y> neocomplcache#close_popup()
+    " 現在選択している候補をキャンセルし、ポップアップを閉じます
+    inoremap <expr><C-e> neocomplcache#cancel_popup()
+endif
+
+if neobundle#is_installed('tagbar')
+  nmap <F8> :TagbarToggle<CR>
+  "tagbarでcssもサポートする
+  let g:tagbar_type_css = {
+        \ 'ctagstype' : 'Css',
+        \ 'kinds' : [
+        \ 'c:classes',
+        \ 's:selectors',
+        \ 'i:identities'
+        \ ]
+        \ }
+endif
+
+if neobundle#is_installed('The-NERD-tree')
+  " 隠しファイルをデフォルトで表示させる
+  let NERDTreeShowHidden = 1
+  " デフォルトでツリーを表示させる
+  autocmd VimEnter * execute 'NERDTree'
+  nnoremap <f2> :NERDTreeToggle<CR>
+
+  " 無視するファイルを設定する
+  let g:NERDTreeIgnore=['\.git$', '\.svn$', '\.bak$']
+  " +|`などを使ってツリー表示をするか
+  " 0 : 綺麗に見せる
+  " 1 : +|`などを使わない
+  let g:NERDTreeDirArrows=0
+
+  "Quickfixのウィンドウだけの場合には終了
+  function! s:NERDTree_Exit_OnlyWindow()
+    if winnr('$') == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary"
+      quit
+    endif
+  endfunction
+  autocmd bufenter * call s:NERDTree_Exit_OnlyWindow()
+endif
+
 
 set pastetoggle=<f5>
-nmap <F8> :TagbarToggle<CR>
 vmap X y/<C-R>"<CR>
