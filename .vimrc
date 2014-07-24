@@ -20,6 +20,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle has('lua') ? 'Shougo/neocomplete.vim' : 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
 NeoBundle 'nanotech/jellybeans.vim'
@@ -58,7 +59,6 @@ set expandtab
 
 "タブ、空白、改行の可視化
 set list
-"set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
 set listchars=tab:>-
 
 "全角スペースをハイライト表示
@@ -124,10 +124,6 @@ syntax on
 "colorscheme wombat256
 colorscheme jellybeans
 
-"set cursorcolumn
-"set cursorline
-"nnoremap <Leader>c :<C-u>setlocal cursorline! cursorcolumn!<CR>
-
 "--------------------------------
 " 文字コード
 "--------------------------------
@@ -172,17 +168,11 @@ augroup END
 " アクティブウィンドウに限りカーソル行(列)を強調する
 augroup vimrc_set_cursorline_only_active_window
   autocmd!
-  autocmd VimEnter,BufWinEnter,WinEnter * setlocal cursorline
-  autocmd WinLeave * setlocal nocursorline
-augroup END
-
-" インサートモードに入った時にカーソル行(列)の色を変更する
-augroup vimrc_change_cursorline_color
-  autocmd!
-  " インサートモードに入った時にカーソル行の色をブルーグリーンにする
-  autocmd InsertEnter * highlight CursorLine term=reverse | highlight CursorColumn term=reverse
-  " インサートモードを抜けた時にカーソル行の色を黒に近いダークグレーにする
-  autocmd InsertLeave * highlight CursorLine ctermbg=236  | highlight CursorColumn ctermbg=236
+  highlight CursorLine ctermbg=232  | highlight CursorColumn ctermbg=232
+  highlight CursorColumn  ctermbg=232  | highlight CursorColumn ctermbg=232
+  autocmd VimEnter,BufWinEnter,WinEnter * setlocal cursorline cursorcolumn
+  autocmd WinLeave * setlocal nocursorline  nocursorcolumn
+  command! -nargs=0 -bar CursorLineToggle :setlocal cursorline! cursorcolumn!
 augroup END
 
 " Quickfix
@@ -268,9 +258,6 @@ elseif neobundle#is_installed('neocomplcache')
     endif
     let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-    " スニペットを展開する。スニペットが関係しないところでは行末まで削除
-    imap <expr><C-k> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "\<C-o>D"
-    smap <expr><C-k> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "\<C-o>D"
     " 前回行われた補完をキャンセルします
     inoremap <expr><C-g> neocomplcache#undo_completion()
     " 補完候補のなかから、共通する部分を補完します
@@ -324,6 +311,29 @@ if neobundle#is_installed('The-NERD-tree')
   autocmd bufenter * call s:NERDTree_Exit_OnlyWindow()
 endif
 
+if neobundle#is_installed('neosnippet')
+  " Enable snipMate compatibility feature.
+  let g:neosnippet#enable_snipmate_compatibility = 1
+  " Tell Neosnippet about the other snippets
+  let g:neosnippet#snippets_directory=''
+
+  " Plugin key-mappings.
+  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k>     <Plug>(neosnippet_expand_target)
+  " SuperTab like snippets behavior.
+  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+        \ "\<Plug>(neosnippet_expand_or_jump)"
+        \: pumvisible() ? "\<C-n>" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+        \ "\<Plug>(neosnippet_expand_or_jump)"
+        \: "\<TAB>"
+
+  " For snippet_complete marker.
+  if has('conceal')
+    set conceallevel=2 concealcursor=i
+  endif
+endif
 
 set pastetoggle=<f5>
 vmap X y/<C-R>"<CR>
