@@ -1,4 +1,5 @@
 scriptencoding utf-8
+set encoding=utf-8
 
 set nocompatible
 filetype off
@@ -23,7 +24,9 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
+"カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
+
 
 NeoBundleCheck
 
@@ -109,6 +112,8 @@ set statusline+=\       "空白スペース
 set statusline+=%y      "ファイル種別
 set statusline+=\       "空白スペース
 set statusline+=%F      "ファイル名
+set statusline+=\       "空白スペース
+set statusline+=%{fugitive#statusline()}  "Git情報
 set statusline+=%=      "左と右の区別
 set statusline+=%1l     "何行目にカーソルがあるか
 set statusline+=/
@@ -118,11 +123,28 @@ set statusline+=%c      "何列目にカーソルがあるか
 set statusline+=\ \
 set statusline+=%P      "ファイル内の%での位置
 
+let s:saved_t_Co=&t_Co
+if $COLORTERM == 'gnome-terminal'
+  set t_Co=256
+endif
+
+" Restore t_Co for less command after vim quit
+augroup restore_t_Co
+  autocmd!
+  if s:saved_t_Co == 8
+    autocmd VimLeave * let &t_Co = 256
+  else
+    autocmd VimLeave * let &t_Co = 8
+  endif
+  autocmd VimLeave * let &t_Co = s:saved_t_Co
+augroup END
+
 "カラー表示
-set t_Co=256
-syntax on
-"colorscheme wombat256
-colorscheme jellybeans
+if &t_Co > 1
+  syntax on
+  "colorscheme wombat256
+  colorscheme jellybeans
+endif
 
 "--------------------------------
 " 文字コード
