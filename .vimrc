@@ -27,17 +27,15 @@ NeoBundle 'The-NERD-tree'
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
 
-
-NeoBundleCheck
-
-filetype plugin indent on
-
 """ 基本設定
 " マシン固有の設定.vimrc.localに記載
 if filereadable(expand('$HOME/.vimrc.local'))
   source $HOME/.vimrc.local
 endif
 
+NeoBundleCheck
+
+filetype plugin indent on
 
 "--------------------------------
 " システム設定
@@ -85,7 +83,7 @@ endif
 set incsearch
 set hlsearch
 
-set history=200
+set history=1000
 set cindent
 
 
@@ -123,28 +121,9 @@ set statusline+=%c      "何列目にカーソルがあるか
 set statusline+=\ \
 set statusline+=%P      "ファイル内の%での位置
 
-let s:saved_t_Co=&t_Co
-if $COLORTERM == 'gnome-terminal'
-  set t_Co=256
-endif
-
-" Restore t_Co for less command after vim quit
-augroup restore_t_Co
-  autocmd!
-  if s:saved_t_Co == 8
-    autocmd VimLeave * let &t_Co = 256
-  else
-    autocmd VimLeave * let &t_Co = 8
-  endif
-  autocmd VimLeave * let &t_Co = s:saved_t_Co
-augroup END
-
-"カラー表示
-if &t_Co > 1
-  syntax on
-  "colorscheme wombat256
-  colorscheme jellybeans
-endif
+set t_Co=256
+syntax on
+colorscheme jellybeans
 
 "--------------------------------
 " 文字コード
@@ -239,12 +218,34 @@ command! -bar -bang -nargs=? -complete=file Scouter
 command! -bar -bang -nargs=? -complete=file GScouter
 \        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
 
-
 augroup myvimrc
   nnoremap <Space>, :so $MYVIMRC<CR>
   nnoremap <Space>. :sp $MYVIMRC<CR>
 augroup END
 
+function! IncludeGuard()
+  try
+    let filepath = expand('%')
+    let extension = fnamemodify(filepath, ':e')
+    let ismatch = match(extension, "h")
+    if ismatch == -1
+      throw "Extension Error"
+    endif
+
+    let name = toupper(fnamemodify(filepath,':t'))
+    let included = '__'.substitute(name,'\.','_','g').'_INCLUDED__'
+
+    let res = {
+                \ "head": '#ifndef '.included."\n#define ".included."\n\n",
+                \ 'foot': "\n".'#endif /* '.included." */"
+                \}
+    silent! execute '1s/^/\=res.head/'
+    silent! execute '$s/$/\=res.foot/'
+
+  catch /Extension Error/
+    echom "Extension Error"
+  endtry
+endfunction
 
 "-------------------------------
 " プラグインの設定
@@ -356,6 +357,9 @@ if neobundle#is_installed('neosnippet')
     set conceallevel=2 concealcursor=i
   endif
 endif
+
+
+
 
 set pastetoggle=<f5>
 vmap X y/<C-R>"<CR>
