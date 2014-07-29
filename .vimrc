@@ -24,6 +24,9 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
+
+NeoBundle 'vim-jp/vimdoc-ja.git'
+
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
 
@@ -223,6 +226,10 @@ augroup myvimrc
   nnoremap <Space>. :sp $MYVIMRC<CR>
 augroup END
 
+augroup vim_help
+  autocmd FileType vim setlocal keywordprg=:help
+augroup END
+
 function! IncludeGuard()
   try
     let filepath = expand('%')
@@ -357,8 +364,6 @@ if neobundle#is_installed('neosnippet')
     set conceallevel=2 concealcursor=i
   endif
 endif
-
-
 
 
 set pastetoggle=<f5>
