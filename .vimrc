@@ -38,8 +38,6 @@ endif
 
 NeoBundleCheck
 
-filetype plugin indent on
-
 "--------------------------------
 " システム設定
 "--------------------------------
@@ -58,8 +56,8 @@ set autoindent
 set tabstop=4
 " cindentやautoindent時に挿入されるタブの幅
 set shiftwidth=4
-" タブの入力を空白文字に置き換える
-set expandtab
+" タブの入力はタブのままにする。ファイルタイプごとに設定する。
+set noexpandtab
 
 "タブ、空白、改行の可視化
 set list
@@ -160,6 +158,7 @@ augroup vimrc_filetype
   autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
 augroup END
 
+
 "myautocmdグループのautocommandをすべて削除する
 augroup myautocmd
   autocmd!
@@ -254,6 +253,14 @@ function! IncludeGuard()
   endtry
 endfunction
 
+augroup pmenu_color
+  hi Pmenu        ctermbg=0      ctermfg=226   "ノーマルアイテム
+  hi PmenuSel     ctermbg=211    ctermfg=0     "選択しているアイテム
+  hi PmenuSbar    ctermbg=0                    "スクロールバー
+  hi PmenuThumb   ctermfg=255                  "スクロールバーのレバー
+augroup END
+
+
 "-------------------------------
 " プラグインの設定
 "-------------------------------
@@ -268,6 +275,7 @@ if neobundle#is_installed('neocomplete')
     let g:neocomplete#keyword_patterns._ = '\h\w*'
 elseif neobundle#is_installed('neocomplcache')
     " neocomplcache用設定
+    let g:acp_enableAtStartup = 0
     " 起動時に有効化
     let g:neocomplcache_enable_at_startup = 1
     " 大文字が入力されるまで大文字小文字の区別を無視する
@@ -368,3 +376,7 @@ endif
 
 set pastetoggle=<f5>
 vmap X y/<C-R>"<CR>
+
+
+filetype plugin indent on
+
