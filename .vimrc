@@ -149,15 +149,6 @@ augroup vimrc_filetype
   autocmd!
 augroup END
 
-augroup vimrc_filetype
-  autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType lua        setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
-augroup END
-
 
 "myautocmdグループのautocommandをすべて削除する
 augroup myautocmd
@@ -273,7 +264,7 @@ if neobundle#is_installed('neocomplete')
         let g:neocomplete#keyword_patterns = {}
     endif
     let g:neocomplete#keyword_patterns._ = '\h\w*'
-elseif neobundle#is_installed('neocomplcache')
+elseif neobundle#is_installed('neocomplcache.vim')
     " neocomplcache用設定
     let g:acp_enableAtStartup = 0
     " 起動時に有効化
@@ -367,6 +358,7 @@ if neobundle#is_installed('neosnippet')
         \ "\<Plug>(neosnippet_expand_or_jump)"
         \: "\<TAB>"
 
+
   " For snippet_complete marker.
   if has('conceal')
     set conceallevel=2 concealcursor=i
@@ -379,4 +371,13 @@ vmap X y/<C-R>"<CR>
 
 
 filetype plugin indent on
+
+augroup vimrc_filetype
+  autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType lua        setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
+augroup END
 
