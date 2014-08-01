@@ -1,4 +1,14 @@
 dotfiles
 ========
+This is hidetzu's dotfiles.
 
-dotfiles管理用
+# How To Use
+## Install
+
+	$mkdir ~/dotfiles
+	$git clone https://github.com/hidetzu/dotfiles.git
+
+## Update
+
+	$cd ~/dotfiles/
+	$./dotfilesLink.sh
