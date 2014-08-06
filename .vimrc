@@ -169,13 +169,14 @@ augroup vimrc_set_cursorline_only_active_window
     let l:current_buffer_name =bufname("%")
     let l:ignore_buffer_name_list=[
           \  "__Tagbar__",
-          \  "NERD_tree_1",
+          \  "NERD_tree_",
           \]
 
     for item in l:ignore_buffer_name_list
-      if l:current_buffer_name ==# item
-        return
+      if match(l:current_buffer_name, item) == -1
+        continue
       endif
+      return
     endfor
 
     setlocal cursorline! cursorcolumn!
