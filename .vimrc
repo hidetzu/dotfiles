@@ -164,7 +164,23 @@ augroup vimrc_set_cursorline_only_active_window
   autocmd!
   highlight CursorLine ctermbg=232  | highlight CursorColumn ctermbg=232
   highlight CursorColumn  ctermbg=232  | highlight CursorColumn ctermbg=232
-  autocmd VimEnter,BufWinEnter,WinEnter * setlocal cursorline cursorcolumn
+
+  function! s:activeCursorlineColum()
+    let l:current_buffer_name =bufname("%")
+    let l:ignore_buffer_name_list=[
+          \  "__Tagbar__",
+          \  "NERD_tree_1",
+          \]
+
+    for item in l:ignore_buffer_name_list
+      if l:current_buffer_name ==# item
+        return
+      endif
+    endfor
+
+    setlocal cursorline! cursorcolumn!
+  endfunction
+  autocmd VimEnter,BufWinEnter,WinEnter * call s:activeCursorlineColum()
   autocmd WinLeave * setlocal nocursorline  nocursorcolumn
   command! -nargs=0 -bar CursorLineToggle :setlocal cursorline! cursorcolumn!
 augroup END
@@ -297,7 +313,7 @@ elseif neobundle#is_installed('neocomplcache.vim')
     inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
     inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
     " <C-h>や<BS>を押したときに確実にポップアップを削除します
-    inoremap <expr><C-h> neocomplcache#smart_close_popup().”\<C-h>”
+    inoremap <expr><C-h> neocomplcache#smart_close_popup() . "\<C-h>"
     " 現在選択している候補を確定します
     inoremap <expr><C-y> neocomplcache#close_popup()
     " 現在選択している候補をキャンセルし、ポップアップを閉じます
@@ -379,5 +395,5 @@ augroup vimrc_filetype
   autocmd FileType lua        setlocal sw=2 sts=2 ts=2 et
   autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType snip       setlocal noexpandtab
 augroup END
-
