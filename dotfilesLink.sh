@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
+ln -sf ~/dotfiles/.bashrc ~/.bashrc
 
 ########################
 # gitが1.7.10以降でないとinclude機能をサポートしていないため

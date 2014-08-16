@@ -24,8 +24,7 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
-
-NeoBundle 'vim-jp/vimdoc-ja.git'
+NeoBundle 'mattn/webapi-vim'
 
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
