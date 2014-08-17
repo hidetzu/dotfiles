@@ -136,24 +136,11 @@ set fileformats=unix,dos,mac
 "-------------------------------
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-
-"vimrc_filetypeグループのautocommandをすべて削除する
-augroup vimrc_filetype
-  autocmd!
-augroup END
-
 
 "myautocmdグループのautocommandをすべて削除する
 augroup myautocmd
   autocmd!
-augroup END
-
-augroup myautocmd
   autocmd VimEnter,WinEnter * match Error /\s\+$/
 augroup END
 
@@ -164,18 +151,16 @@ augroup vimrc_set_cursorline_only_active_window
   highlight CursorColumn  ctermbg=232  | highlight CursorColumn ctermbg=232
 
   function! s:activeCursorlineColum()
-    let l:current_buffer_name =bufname("%")
-    let l:ignore_buffer_name_list=[
-          \  "__Tagbar__",
-          \  "NERD_tree_",
-          \]
+    let l:ignore_buffer_type_list=[
+      \ "nofile",
+      \ "quickfix",
+      \ "help",
+      \]
 
-    for item in l:ignore_buffer_name_list
-      if match(l:current_buffer_name, item) == -1
-        continue
-      endif
+    let l:current_buftype=getbufvar(winbufnr(0), '&buftype')
+    if index(l:ignore_buffer_type_list, l:current_buftype) >= 0
       return
-    endfor
+    endif
 
     setlocal cursorline! cursorcolumn!
   endfunction
@@ -227,6 +212,7 @@ command! -bar -bang -nargs=? -complete=file GScouter
 \        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
 
 augroup myvimrc
+  autocmd!
   nnoremap <Space>, :so $MYVIMRC<CR>
   nnoremap <Space>. :sp $MYVIMRC<CR>
 augroup END
@@ -237,22 +223,21 @@ augroup END
 
 function! IncludeGuard()
   try
-    let filepath = expand('%')
-    let extension = fnamemodify(filepath, ':e')
-    let ismatch = match(extension, "h")
-    if ismatch == -1
+    let l:filepath = expand('%')
+    let l:extension = fnamemodify(l:filepath, ':e')
+    if match(l:extension, "h") == -1
       throw "Extension Error"
     endif
 
-    let name = toupper(fnamemodify(filepath,':t'))
-    let included = '__'.substitute(name,'\.','_','g').'_INCLUDED__'
+    let l:name = toupper(fnamemodify(l:filepath,':t'))
+    let l:included = '__'.substitute(l:name,'\.','_','g').'_INCLUDED__'
 
-    let res = {
-                \ "head": '#ifndef '.included."\n#define ".included."\n\n",
-                \ 'foot': "\n".'#endif /* '.included." */"
+    let l:res = {
+                \ "head": '#ifndef '.l:included."\n#define ".l:included."\n\n",
+                \ 'foot': "\n".'#endif /* '.l:included." */"
                 \}
-    silent! execute '1s/^/\=res.head/'
-    silent! execute '$s/$/\=res.foot/'
+    silent! execute '1s/^/\=l:res.head/'
+    silent! execute '$s/$/\=l:res.foot/'
 
   catch /Extension Error/
     echom "Extension Error"
@@ -260,9 +245,10 @@ function! IncludeGuard()
 endfunction
 
 augroup pmenu_color
-  hi Pmenu        ctermbg=0      ctermfg=226   "ノーマルアイテム
+  autocmd!
+  hi Pmenu        ctermbg=159    ctermfg=0     "ノーマルアイテム
   hi PmenuSel     ctermbg=211    ctermfg=0     "選択しているアイテム
-  hi PmenuSbar    ctermbg=0                    "スクロールバー
+  hi PmenuSbar    ctermbg=159                  "スクロールバー
   hi PmenuThumb   ctermfg=255                  "スクロールバーのレバー
 augroup END
 
@@ -424,6 +410,8 @@ vmap X y/<C-R>"<CR>
 filetype plugin indent on
 
 augroup vimrc_filetype
+  "vimrc_filetypeグループのautocommandをすべて削除する
+  autocmd!
   autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
