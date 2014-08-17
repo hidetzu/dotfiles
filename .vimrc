@@ -64,7 +64,7 @@ set listchars=tab:>-
 
 "全角スペースをハイライト表示
 function! ZenkakuSpace()
-    highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
+  highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
 endfunction
 
 if has('syntax')
@@ -75,7 +75,6 @@ if has('syntax')
   augroup END
   call ZenkakuSpace()
 endif
-
 
 "--------------------------------
 " 検索
@@ -267,57 +266,94 @@ augroup pmenu_color
   hi PmenuThumb   ctermfg=255                  "スクロールバーのレバー
 augroup END
 
-
 "-------------------------------
 " プラグインの設定
 "-------------------------------
-if neobundle#is_installed('neocomplete')
-    " neocomplete用設定
-    let g:neocomplete#enable_at_startup = 1
-    let g:neocomplete#enable_ignore_case = 1
-    let g:neocomplete#enable_smart_case = 1
-    if !exists('g:neocomplete#keyword_patterns')
-        let g:neocomplete#keyword_patterns = {}
-    endif
-    let g:neocomplete#keyword_patterns._ = '\h\w*'
-elseif neobundle#is_installed('neocomplcache.vim')
-    " neocomplcache用設定
-    let g:acp_enableAtStartup = 0
-    " 起動時に有効化
-    let g:neocomplcache_enable_at_startup = 1
-    " 大文字が入力されるまで大文字小文字の区別を無視する
-    let g:neocomplcache_enable_smart_case = 1
-    " _(アンダースコア)区切りの補完を有効化
-    let g:neocomplcache_enable_underbar_completion = 1
-    let g:neocomplcache_enable_camel_case_completion  =  1
-    " ポップアップメニューで表示される候補の数
-    let g:neocomplcache_max_list = 20
-    " シンタックスをキャッシュするときの最小文字長
-    let g:neocomplcache_min_syntax_length = 3
-    " ディクショナリ定義
-    let g:neocomplcache_dictionary_filetype_lists = {
-          \ 'default' : '',
-          \ }
-    if !exists('g:neocomplcache_keyword_patterns')
-      let g:neocomplcache_keyword_patterns = {}
-    endif
-    let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+if neobundle#is_installed('neocomplete.vim')
+  " neocomplete用設定
+  let g:acp_enableAtStartup = 0
+  " 起動時に有効化
+  let g:neocomplete#enable_at_startup = 1
 
-    " 前回行われた補完をキャンセルします
-    inoremap <expr><C-g> neocomplcache#undo_completion()
-    " 補完候補のなかから、共通する部分を補完します
-    inoremap <expr><C-l> neocomplcache#complete_common_string()
-    " 改行で補完ウィンドウを閉じる
-    inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
-    "tabで補完候補の選択を行う
-    inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
-    inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
-    " <C-h>や<BS>を押したときに確実にポップアップを削除します
-    inoremap <expr><C-h> neocomplcache#smart_close_popup() . "\<C-h>"
-    " 現在選択している候補を確定します
-    inoremap <expr><C-y> neocomplcache#close_popup()
-    " 現在選択している候補をキャンセルし、ポップアップを閉じます
-    inoremap <expr><C-e> neocomplcache#cancel_popup()
+  " 補完時に大文字/小文字を無視するかどうか
+  let g:neocomplete#enable_ignore_case = 0
+  let g:neocomplete#enable_smart_case = 1
+
+  " Define keyword.
+  if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+  endif
+  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+  " Set minimum syntax keyword length.
+  let g:neocomplete#sources#syntax#min_keyword_length = 3
+  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+  " ディクショナリ定義
+  let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ }
+
+  " Define keyword.
+  if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+  endif
+  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+  " 前回行われた補完をキャンセルします
+  inoremap <expr><C-g> neocomplete#undo_completion()
+  " 補完候補のなかから、共通する部分を補完します
+  inoremap <expr><C-l> neocomplete#complete_common_string()
+  " 改行で補完ウィンドウを閉じる
+  inoremap <expr><CR> neocomplete#smart_close_popup() . "\<CR>"
+  "tabで補完候補の選択を行う
+  inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
+  inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
+  " <C-h>や<BS>を押したときに確実にポップアップを削除します
+  inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
+  " 現在選択している候補を確定します
+  inoremap <expr><C-y> neocomplete#close_popup()
+  " 現在選択している候補をキャンセルし、ポップアップを閉じます
+  inoremap <expr><C-e> neocomplete#cancel_popup()
+
+elseif neobundle#is_installed('neocomplcache.vim')
+  " neocomplcache用設定
+  let g:acp_enableAtStartup = 0
+  " 起動時に有効化
+  let g:neocomplcache_enable_at_startup = 1
+  " 大文字が入力されるまで大文字小文字の区別を無視する
+  let g:neocomplcache_enable_smart_case = 1
+  " _(アンダースコア)区切りの補完を有効化
+  let g:neocomplcache_enable_underbar_completion = 1
+  let g:neocomplcache_enable_camel_case_completion  =  1
+  " ポップアップメニューで表示される候補の数
+  let g:neocomplcache_max_list = 20
+  " シンタックスをキャッシュするときの最小文字長
+  let g:neocomplcache_min_syntax_length = 3
+  " ディクショナリ定義
+  let g:neocomplcache_dictionary_filetype_lists = {
+        \ 'default' : '',
+        \ }
+  if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+  endif
+  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+  " 前回行われた補完をキャンセルします
+  inoremap <expr><C-g> neocomplcache#undo_completion()
+  " 補完候補のなかから、共通する部分を補完します
+  inoremap <expr><C-l> neocomplcache#complete_common_string()
+  " 改行で補完ウィンドウを閉じる
+  inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
+  "tabで補完候補の選択を行う
+  inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
+  inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
+  " <C-h>や<BS>を押したときに確実にポップアップを削除します
+  inoremap <expr><C-h> neocomplcache#smart_close_popup() . "\<C-h>"
+  " 現在選択している候補を確定します
+  inoremap <expr><C-y> neocomplcache#close_popup()
+  " 現在選択している候補をキャンセルし、ポップアップを閉じます
+  inoremap <expr><C-e> neocomplcache#cancel_popup()
 endif
 
 if neobundle#is_installed('tagbar')
@@ -347,7 +383,7 @@ if neobundle#is_installed('The-NERD-tree')
   " 1 : +|`などを使わない
   let g:NERDTreeDirArrows=0
 
-  "Quickfixのウィンドウだけの場合には終了
+  "NERDTreeのウィンドウだけの場合には終了
   function! s:NERDTree_Exit_OnlyWindow()
     if winnr('$') == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary"
       quit
@@ -380,7 +416,6 @@ if neobundle#is_installed('neosnippet')
     set conceallevel=2 concealcursor=i
   endif
 endif
-
 
 set pastetoggle=<f5>
 vmap X y/<C-R>"<CR>
