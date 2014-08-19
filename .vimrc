@@ -213,8 +213,20 @@ command! -bar -bang -nargs=? -complete=file GScouter
 
 augroup myvimrc
   autocmd!
-  nnoremap <Space>, :so $MYVIMRC<CR>
-  nnoremap <Space>. :sp $MYVIMRC<CR>
+  function! s:File_open(path)
+    if bufexists(a:path)
+      let l:winnr = bufwinnr(a:path)
+      if l:winnr <= 0
+        let l:winnr = 1
+      endif
+      execute l:winnr .'wincmd w'
+    else
+      execute 'split '.a:path
+    endif
+  endfunction
+
+  nnoremap <silent> <Space>, :so $MYVIMRC<CR>
+  nnoremap <silent> <Space>. :call <SID>File_open($MYVIMRC)<CR>
 augroup END
 
 augroup vim_help
@@ -414,6 +426,7 @@ augroup vimrc_filetype
   autocmd!
   autocmd FileType sh         setlocal sw=2 sts=2 ts=2 et
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType lua        setlocal sw=2 sts=2 ts=2 et
   autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
