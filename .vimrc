@@ -94,6 +94,7 @@ set title
 set nowrap
 set showcmd
 set laststatus=2
+set diffopt=filler,vertical
 
 "ステータスライン表示文字列
 set statusline=%<       "行が長すぎるときに切り詰める位置
