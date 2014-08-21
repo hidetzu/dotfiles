@@ -12,9 +12,15 @@ if [ -x `which vim` ]; then
   alias view='vim -R'
 fi
 
-
 export EDITOR=vim
 
-if [[ -e ~/.bashrc.local ]]; then
+# set term colors
+if [ -e /usr/share/terminfo/x/xterm-256color ]; then
+  export TERM='xterm-256color'
+else
+  export TERM='xterm-color'
+fi
+
+if [ -e ~/.bashrc.local ]; then
   source ~/.bashrc.local
 fi

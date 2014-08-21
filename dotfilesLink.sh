@@ -2,6 +2,7 @@
 
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
 ln -sf ~/dotfiles/.bashrc ~/.bashrc
+ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 
 ########################
 # gitが1.7.10以降でないとinclude機能をサポートしていないため
