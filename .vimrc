@@ -139,6 +139,9 @@ cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
+"tmuxからのコピー内容を読み出す
+nnoremap <C-b> :read ~/.simple_clipboadr<CR>
+
 "myautocmdグループのautocommandをすべて削除する
 augroup myautocmd
   autocmd!
