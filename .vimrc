@@ -57,6 +57,8 @@ set tabstop=4
 set shiftwidth=4
 " タブの入力はタブのままにする。ファイルタイプごとに設定する。
 set noexpandtab
+" 全角記号の表示がおかしくなる問題に対する対策
+set ambiwidth =double
 
 "タブ、空白、改行の可視化
 set list
