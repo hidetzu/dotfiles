@@ -25,6 +25,8 @@ NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
 NeoBundle 'mattn/webapi-vim'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'vim-scripts/DirDiff.vim'
 
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
@@ -432,6 +434,25 @@ if neobundle#is_installed('jellybeans.vim')
   augroup END
 
 endif
+
+if neobundle#is_installed('vim-indent-guides')
+  " vim-indent-guides
+  " Vim 起動時 vim-indent-guides を自動起動
+  let g:indent_guides_enable_on_vim_startup=1
+  " ガイドをスタートするインデントの量
+  let g:indent_guides_start_level=2
+  " 自動カラー無効
+  let g:indent_guides_auto_colors=0
+  " 奇数番目のインデントの色
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=110
+  " 偶数番目のインデントの色
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=140
+  " ハイライト色の変化の幅
+  let g:indent_quides_color_change_percent = 30
+  " ガイドの幅
+  let g:indent_guides_guide_size = 1
+end
+
 
 set pastetoggle=<f5>
 vmap X y/<C-R>"<CR>
