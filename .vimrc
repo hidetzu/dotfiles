@@ -29,8 +29,13 @@ NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
 NeoBundle 'mattn/webapi-vim'
+NeoBundle 'thinca/vim-ref'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'vim-scripts/DirDiff.vim'
+
+NeoBundle 'scrooloose/syntastic'
+
+"ステータスライン
+NeoBundle 'itchyny/lightline.vim'
 
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
@@ -65,6 +70,7 @@ set shiftwidth=4
 set noexpandtab
 " 全角記号の表示がおかしくなる問題に対する対策
 set ambiwidth =double
+set pastetoggle=<f5>
 
 "タブ、空白、改行の可視化
 set list
@@ -102,32 +108,7 @@ set title
 set nowrap
 set showcmd
 set laststatus=2
-set diffopt=filler,vertical
-
-"ステータスライン表示文字列
-set statusline=%<       "行が長すぎるときに切り詰める位置
-set statusline+=[%n]    "バッファ番号
-set statusline+=%m      "修正フラグ
-set statusline+=%r      "読み込み専用フラグ
-set statusline+=%h      "ヘルプビューウィンドウフラグ
-set statusline+=%h      "ヘルプビューウィンドウフラグ
-set statusline+=\       "空白スペース
-set statusline+=%{&fenc}:"ファイルの文字コード
-set statusline+=%{&fileformat} "ファイルの改行コード
-set statusline+=\       "空白スペース
-set statusline+=%y      "ファイル種別
-set statusline+=\       "空白スペース
-set statusline+=%F      "ファイル名
-set statusline+=\       "空白スペース
-set statusline+=%{fugitive#statusline()}  "Git情報
-set statusline+=%=      "左と右の区別
-set statusline+=%1l     "何行目にカーソルがあるか
-set statusline+=/
-set statusline+=%L      "バッファの総行数
-set statusline+=,
-set statusline+=%c      "何列目にカーソルがあるか
-set statusline+=\ \
-set statusline+=%P      "ファイル内の%での位置
+"set diffopt=filler,vertical
 
 set t_Co=256
 syntax on
@@ -457,8 +438,74 @@ if neobundle#is_installed('vim-indent-guides')
   let g:indent_guides_guide_size = 1
 end
 
+if neobundle#is_installed('syntastic')
+  augroup AutoSyntastic
+      autocmd!
+        autocmd BufWritePost *.c,*.cpp call s:syntastic()
+      augroup END
+      function! s:syntastic()
+        SyntasticCheck
+        call lightline#update()
+      endfunction
+end
 
-set pastetoggle=<f5>
+if neobundle#is_installed('lightline.vim')
+  let g:lightline = {
+        \ 'colorscheme': 'jellybeans',
+        \ 'active': {
+        \ 'left': [
+        \   ['mode', 'paste'],
+        \   ['bufn', 'modified', 'readonly', 'help'],
+        \   ['filename', 'filetype', 'fileencoding','fileformat'],
+        \   ['fugitive'],
+        \  ],
+        \ 'right': [
+        \   [ 'syntastic'],
+        \   [ 'totalline', 'lineinfo' ],
+        \   [ 'percent' ],
+        \  ],
+        \ },
+        \ 'component': {
+        \   'help': '%h',
+        \   'filetype': '%y',
+        \   'fugitive': '%{fugitive#statusline()}',
+        \   'totalline': '%L',
+        \ },
+        \ 'component_expand': {
+        \   'syntastic': 'SyntasticStatuslineFlag',
+        \ },
+        \ 'component_type': {
+        \   'syntastic': 'error',
+        \ },
+        \ 'separator': { 'left': '', 'right': '' },
+        \ 'subseparator': { 'left': '|', 'right': '|' }
+        \ }
+else
+  "ステータスライン表示文字列
+  set statusline=%<       "行が長すぎるときに切り詰める位置
+  set statusline+=[%n]    "バッファ番号
+  set statusline+=%m      "修正フラグ
+  set statusline+=%r      "読み込み専用フラグ
+  set statusline+=%h      "ヘルプビューウィンドウフラグ
+  set statusline+=\       "空白スペース
+  set statusline+=%{&fenc}:"ファイルの文字コード
+  set statusline+=%{&fileformat} "ファイルの改行コード
+  set statusline+=\       "空白スペース
+  set statusline+=%y      "ファイル種別
+  set statusline+=\       "空白スペース
+  set statusline+=%F      "ファイル名
+  set statusline+=\       "空白スペース
+  set statusline+=%{fugitive#statusline()}  "Git情報
+  set statusline+=%=      "左と右の区別
+  set statusline+=%1l     "何行目にカーソルがあるか
+  set statusline+=/
+  set statusline+=%L      "バッファの総行数
+  set statusline+=,
+  set statusline+=%c      "何列目にカーソルがあるか
+  set statusline+=\ \
+  set statusline+=%P      "ファイル内の%での位置
+end
+
 vmap X y/<C-R>"<CR>
 
 
