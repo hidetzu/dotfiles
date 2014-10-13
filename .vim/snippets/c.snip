@@ -1,0 +1,8 @@
+snippet include_guard
+alias   inc_guard
+prev_word '^'
+abbr    #ifndef HOGE #define HOGE #endif
+    #ifndef `"__".toupper( substitute( expand("%"), "\\.", "_", "g" ) )."__"`
+    #define `"__".toupper( substitute( expand("%"), "\\.", "_", "g" ) )."__"`
+    ${0}
+    #endif  `"/*__".toupper( substitute( expand("%"), "\\.", "_", "g" ) )."__*/"`

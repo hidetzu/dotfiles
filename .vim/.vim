@@ -1,0 +1,1 @@
+/home/hidekazu/dotfiles/.vim
