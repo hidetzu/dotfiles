@@ -1,8 +1,16 @@
 #!/bin/sh
 
-ln -sf ~/dotfiles/.vimrc ~/.vimrc
-ln -sf ~/dotfiles/.bashrc ~/.bashrc
-ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
+DOT_FILES=(
+.bashrc
+.tmux.conf
+.vimrc
+.vim
+)
+
+for file in ${DOT_FILES[@]}
+do
+  ln -sf $HOME/dotfiles/$file $HOME/$file
+done
 
 ########################
 # gitが1.7.10以降でないとinclude機能をサポートしていないため
@@ -31,3 +39,5 @@ if [ $git_include_use -eq 1 ]; then
 else
   echo ".gitconfig skiped "
 fi
+
+[ ! -d ~/.vim/bundle ] && mkdir -p ~/.vim/bundle && git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim && echo "you should run following command to setup plugins -> vim -c ':NeoBundleInstall'"

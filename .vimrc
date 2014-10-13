@@ -14,10 +14,11 @@ if has('vim_starting')
 endif
 
 "neobundle.vimの初期化
-call neobundle#rc(expand('$HOME/.vim/bundle'))
+call neobundle#begin(expand('~/.vim/bundle/'))
 
 "neobundle.vimを更新するための設定
 NeoBundleFetch 'Shougo/neobundle.vim'
+
 
 "-------------------------------
 " NeoBundleで管理するプラグイン
@@ -39,6 +40,7 @@ NeoBundle 'itchyny/lightline.vim'
 
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
+call neobundle#end()
 
 """ 基本設定
 " マシン固有の設定.vimrc.localに記載
@@ -379,7 +381,7 @@ if neobundle#is_installed('neosnippet')
   " Enable snipMate compatibility feature.
   let g:neosnippet#enable_snipmate_compatibility = 1
   " Tell Neosnippet about the other snippets
-  let g:neosnippet#snippets_directory=''
+  let g:neosnippet#snippets_directory='$HOME/.vim/snippets/ $HOME/.vim/bundle/neosnippet-snippets/neosnippets/'
 
   " Plugin key-mappings.
   imap <C-k>     <Plug>(neosnippet_expand_or_jump)
