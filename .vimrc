@@ -457,7 +457,7 @@ if neobundle#is_installed('lightline.vim')
         \ 'active': {
         \ 'left': [
         \   ['mode', 'paste'],
-        \   ['bufn', 'modified', 'readonly', 'help'],
+        \   [ 'bufnum', 'modified', 'readonly', 'help'],
         \   ['filename', 'filetype', 'fileencoding','fileformat'],
         \   ['fugitive'],
         \  ],
@@ -468,6 +468,7 @@ if neobundle#is_installed('lightline.vim')
         \  ],
         \ },
         \ 'component': {
+        \   'bufnum': "[%n]",
         \   'help': '%h',
         \   'filetype': '%y',
         \   'fugitive': '%{fugitive#statusline()}',
