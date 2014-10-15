@@ -33,7 +33,7 @@ nnoremap <C-b> :read ~/.simple_clipboadr<CR>
 augroup quickfixopen
   autocmd!
   "grep makeは検索結果を常の表示する
-  autocmd QuickFixCmdPost make,*grep* cwindow
+  autocmd QuickFixCmdPost make cwindow
 augroup END
 
 "Quickfixのウィンドウだけの場合には終了
