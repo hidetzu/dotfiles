@@ -245,6 +245,7 @@ if neobundle#is_installed('unite.vim')
   \    "description" : "sample unite-menu",
   \    "command_candidates" : [
   \          ["edit vimrc", "edit $MYVIMRC"],
+  \          ["edit vim_config", "Unite file open $HOME/.vim/conf.d/"],
   \          ["edit gvimrc", "edit $MYGVIMRC"],
   \          ["load vimrc", "so  $MYVIMRC"],
   \          ["load gvimrc", "so $MYGVIMRC"],

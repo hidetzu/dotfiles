@@ -32,6 +32,7 @@ NeoBundle 'Shougo/vimproc', {
   \ },
 \ }
 NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'Shougo/unite-build.git'
 
 
 "NeoBundleLazy 'alpaca-tc/alpaca_tags', {
