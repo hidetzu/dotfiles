@@ -11,7 +11,7 @@ set nocompatible
 filetype off
 
 set runtimepath+=~/.vim
-runtime! config/*.vimrc
+runtime! conf.d/*.vim
 
 ""マシン固有の設定.vimrc.localに記載
 if filereadable(expand('$HOME/.vimrc.local'))
