@@ -214,3 +214,47 @@ if neobundle#is_installed('lightline.vim')
         \ }
 end
 
+
+"" unite.vim {{{
+if neobundle#is_installed('unite.vim')
+    " The prefix key.
+  nnoremap    [unite]   <Nop>
+  nmap    <Leader>f [unite]
+ 
+  " unite.vim keymap
+  nnoremap [unite]u  :<C-u>Unite-no-split<Space>
+  nnoremap <silent> [unite]f :<C-u>Unite<Space>file<CR>
+  nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
+  nnoremap <silent> [unite]w :<C-u>Unite<Space>window<CR>
+  nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
+  nnoremap <silent> [unite]a :<C-u>Unite<Space>buffer file file_mru bookmark<CR>
+  nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
+  nnoremap <silent> ,vr :UniteResume<CR>
+   
+  " vinarise
+  let g:vinarise_enable_auto_detect = 1
+   
+  " unite-build map
+  nnoremap <silent> ,vb :Unite build<CR>
+  nnoremap <silent> ,vcb :Unite build:!<CR>
+  nnoremap <silent> ,vch :UniteBuildClearHighlight<CR>
+
+  "menu
+  let g:unite_source_menu_menus = {
+  \   "shortcut" : {
+  \    "description" : "sample unite-menu",
+  \    "command_candidates" : [
+  \          ["edit vimrc", "edit $MYVIMRC"],
+  \          ["edit gvimrc", "edit $MYGVIMRC"],
+  \          ["load vimrc", "so  $MYVIMRC"],
+  \          ["load gvimrc", "so $MYGVIMRC"],
+  \          ["unite-file_mru", "Unite file_mru"],
+  \          ["Unite Beautiful Attack", "Unite -auto-preview colorscheme"],
+  \          ["unite-output:message", "Unite output:message"],
+  \      ],
+  \ },
+  \}
+
+  end
+""}}}
+

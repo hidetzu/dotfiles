@@ -115,3 +115,5 @@ function! IncludeGuard()
     echom "Extension Error"
   endtry
 endfunction
+
+let mapleader = ","
