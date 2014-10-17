@@ -169,6 +169,32 @@ if neobundle#is_installed('vim-indent-guides')
   let g:indent_guides_guide_size = 1
 end
 
+"" quickrun {{
+if neobundle#is_installed("vim-quickrun")
+  let g:quickrun_config = get(g:, 'quickrun_config', {})
+  " vimproc を使って非同期に実行し，結果を quickfix に出力する
+  let g:quickrun_config._ = {
+              \ 'outputter' : 'quickfix',
+              \ 'runner' : 'vimproc'
+              \ }
+  let g:quickrun_config = {
+              \ 'c' : {
+              \   'command' : 'gcc',
+              \   'cmdopt'  : '-Wall -Wextra',
+              \   'outputter' : 'quickfix',
+              \   'runner' : 'vimproc'
+              \   },
+              \ 'make' : {
+              \   'command': 'make',
+              \   'outputter' : 'quickfix',
+              \   'runner' : 'vimproc'
+              \   },
+              \}
+
+end
+""}}
+
+"" syntastic {{{
 if neobundle#is_installed('syntastic')
   augroup AutoSyntastic
       autocmd!
@@ -179,7 +205,9 @@ if neobundle#is_installed('syntastic')
         call lightline#update()
       endfunction
 end
+""}}}
 
+"" lightline.vim {{{
 if neobundle#is_installed('lightline.vim')
   let g:lightline = {
         \ 'colorscheme': 'jellybeans',
@@ -213,6 +241,7 @@ if neobundle#is_installed('lightline.vim')
         \ 'subseparator': { 'left': '|', 'right': '|' }
         \ }
 end
+""}}}
 
 
 "" unite.vim {{{
@@ -242,10 +271,10 @@ if neobundle#is_installed('unite.vim')
   "menu
   let g:unite_source_menu_menus = {
   \   "shortcut" : {
-  \    "description" : "sample unite-menu",
+  \    "description" : "unite-shortcut",
   \    "command_candidates" : [
   \          ["edit vimrc", "edit $MYVIMRC"],
-  \          ["edit vim_config", "Unite file open $HOME/.vim/conf.d/"],
+  \          ["edit vim_config", "UniteWithInput file -no-quit -input=$HOME/.vim/conf.d/ -no-here"],
   \          ["edit gvimrc", "edit $MYGVIMRC"],
   \          ["load vimrc", "so  $MYVIMRC"],
   \          ["load gvimrc", "so $MYGVIMRC"],
@@ -253,7 +282,15 @@ if neobundle#is_installed('unite.vim')
   \          ["Unite Beautiful Attack", "Unite -auto-preview colorscheme"],
   \          ["unite-output:message", "Unite output:message"],
   \      ],
-  \ },
+  \   },
+  \
+  \   "toggle_options" : {
+  \    "description" : "unite-toggle-options",
+  \    "command_candidates" : [
+  \     ["tagbar",  "TagbarToggle"],
+  \     ["nerdtree", "NERDTreeToggle"],
+  \   ],
+  \   },
   \}
 
   end

@@ -22,6 +22,7 @@ NeoBundle 'The-NERD-tree'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc', {
   \ 'build' : {
@@ -33,6 +34,8 @@ NeoBundle 'Shougo/vimproc', {
 \ }
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/unite-build.git'
+NeoBundle 'tsukkee/unite-tag.git'
+
 
 
 "NeoBundleLazy 'alpaca-tc/alpaca_tags', {

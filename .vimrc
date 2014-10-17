@@ -1,8 +1,6 @@
 
 " Note: Skip initialization for vim-tiny or vim-small.
-if !1
-  finish
-endif
+if !1 | finish | endif
 
 scriptencoding utf-8
 set encoding=utf-8
