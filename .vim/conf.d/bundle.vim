@@ -19,7 +19,9 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'The-NERD-tree'
+
 NeoBundle 'mattn/webapi-vim'
+
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'thinca/vim-quickrun'
@@ -50,6 +52,7 @@ NeoBundle 'tsukkee/unite-tag.git'
 "              \ }
 
 NeoBundle 'scrooloose/syntastic'
+"NeoBundle "osyo-manga/vim-watchdogs"
 
 "ステータスライン
 NeoBundle 'itchyny/lightline.vim'

@@ -293,6 +293,11 @@ if neobundle#is_installed('unite.vim')
   \   },
   \}
 
-  end
+end
 ""}}}
 
+"" neomru.vim {{{
+if neobundle#is_installed('neomru.vim')
+  let g:neomru#time_format="(%Y/%m/%d %H:%M:%S) "
+end
+""}}}
