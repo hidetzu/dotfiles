@@ -102,6 +102,7 @@ if neobundle#is_installed('tagbar')
         \ }
 endif
 
+""{{{ The-NERD-tree
 if neobundle#is_installed('The-NERD-tree')
   " 隠しファイルをデフォルトで表示させる
   let NERDTreeShowHidden = 1
@@ -110,20 +111,16 @@ if neobundle#is_installed('The-NERD-tree')
   nnoremap <f2> :NERDTreeToggle<CR>
 
   " 無視するファイルを設定する
-  let g:NERDTreeIgnore=['\.git$', '\.svn$', '\.bak$']
+  let g:NERDTreeIgnore=['\.git$', '\.svn$', '\.bak$', '\.swp$', '\~$']
   " +|`などを使ってツリー表示をするか
   " 0 : 綺麗に見せる
   " 1 : +|`などを使わない
   let g:NERDTreeDirArrows=0
 
   "NERDTreeのウィンドウだけの場合には終了
-  function! s:NERDTree_Exit_OnlyWindow()
-    if winnr('$') == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary"
-      quit
-    endif
-  endfunction
-  autocmd bufenter * call s:NERDTree_Exit_OnlyWindow()
+  autocmd bufenter * if (winnr('$') == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | quit | endif
 endif
+""}}}
 
 if neobundle#is_installed('neosnippet')
   " Enable snipMate compatibility feature.
