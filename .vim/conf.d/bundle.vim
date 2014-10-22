@@ -38,8 +38,6 @@ NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/unite-build.git'
 NeoBundle 'tsukkee/unite-tag.git'
 
-
-
 "NeoBundleLazy 'alpaca-tc/alpaca_tags', {
 "              \    'depends': ['Shougo/vimproc'],
 "              \    'autoload' : {

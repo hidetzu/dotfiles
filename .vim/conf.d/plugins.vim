@@ -167,7 +167,7 @@ if neobundle#is_installed('vim-indent-guides')
   let g:indent_quides_color_change_percent = 30
   " ガイドの幅
   let g:indent_guides_guide_size = 1
-end
+endif
 
 "" quickrun {{
 if neobundle#is_installed("vim-quickrun")
@@ -191,7 +191,7 @@ if neobundle#is_installed("vim-quickrun")
               \   },
               \}
 
-end
+endif
 ""}}
 
 "" syntastic {{{
@@ -204,7 +204,7 @@ if neobundle#is_installed('syntastic')
         SyntasticCheck
         call lightline#update()
       endfunction
-end
+    endif
 ""}}}
 
 "" lightline.vim {{{
@@ -240,7 +240,7 @@ if neobundle#is_installed('lightline.vim')
         \ 'separator': { 'left': '', 'right': '' },
         \ 'subseparator': { 'left': '|', 'right': '|' }
         \ }
-end
+endif
 ""}}}
 
 
@@ -258,11 +258,13 @@ if neobundle#is_installed('unite.vim')
   nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
   nnoremap <silent> [unite]a :<C-u>Unite<Space>buffer file file_mru bookmark<CR>
   nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
+  nnoremap <silent> [unite]g :<C-u>Unite<Space>grep -no-quit<CR>
   nnoremap <silent> ,vr :UniteResume<CR>
    
   " vinarise
   let g:vinarise_enable_auto_detect = 1
    
+
   " unite-build map
   nnoremap <silent> ,vb :Unite build<CR>
   nnoremap <silent> ,vcb :Unite build:!<CR>
@@ -293,11 +295,28 @@ if neobundle#is_installed('unite.vim')
   \   },
   \}
 
-end
+    "ESCでuniteを終了
+  nmap <buffer> <ESC> <Plug>(unite_exit)
+  "入力モードのときjjでノーマルモードに移動
+  imap <buffer> jj <Plug>(unite_insert_leave)
+  "入力モードのときctrl+wでバックスラッシュも削除
+  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  "ctrl+jで縦に分割して開く
+  nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+  inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+  "ctrl+jで横に分割して開く
+  nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+  inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+  "ctrl+oでその場所に開く
+  nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+  inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+
+endif
 ""}}}
 
 "" neomru.vim {{{
 if neobundle#is_installed('neomru.vim')
   let g:neomru#time_format="(%Y/%m/%d %H:%M:%S) "
-end
+endif
 ""}}}
+
