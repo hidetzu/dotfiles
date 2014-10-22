@@ -259,19 +259,32 @@ endif
 
 "" unite.vim {{{
 if neobundle#is_installed('unite.vim')
-    " The prefix key.
+   " The prefix key.
   nnoremap    [unite]   <Nop>
   nmap    <Leader>f [unite]
+
+ " history/yank有効
+  let g:unite_source_history_yank_enable = 1 
  
   " unite.vim keymap
   nnoremap [unite]u  :<C-u>Unite-no-split<Space>
-  nnoremap <silent> [unite]f :<C-u>Unite<Space>file<CR>
-  nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
-  nnoremap <silent> [unite]w :<C-u>Unite<Space>window<CR>
-  nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
+  nnoremap <silent> [unite]f :<C-u>Unite<Space> -buffer-name=files file<CR>
+  nnoremap <silent> [unite]m :<C-u>Unite<Space> -buffer-name==files file_mru<CR>
+  nnoremap <silent> [unite]b :<C-u>Unite<Space> -buffer-name=buffer buffer<CR>
+
+  nnoremap <silent> [unite]g :<C-u>Unite<Space>grep -buffer-name=grep<CR>
+  nnoremap <silent> [unite]gn :<C-u>Unite<Space>grep -buffer-name=grep -no-quit<CR>
+
+  nnoremap <silent> [unite]w :<C-u>Unite<Space> -buffer-name=window window<CR>
+
+  nnoremap <silent> [unite]hy :<C-u>Unite<Space> -buffer-name=register history/yank<CR>
+
+
+
   nnoremap <silent> [unite]a :<C-u>Unite<Space>buffer file file_mru bookmark<CR>
-  nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
-  nnoremap <silent> [unite]g :<C-u>Unite<Space>grep -no-quit<CR>
+
+
+  nnoremap <silent> [unite]r :<C-u>Unite<Space>-buffer-name=register register<CR>
   nnoremap <silent> ,vr :UniteResume<CR>
    
   " vinarise
@@ -308,21 +321,30 @@ if neobundle#is_installed('unite.vim')
   \   },
   \}
 
+  autocmd FileType unite call s:unite_my_setting()
+
+  function! s:unite_my_setting()
+
     "ESCでuniteを終了
-  nmap <buffer> <ESC> <Plug>(unite_exit)
-  "入力モードのときjjでノーマルモードに移動
-  imap <buffer> jj <Plug>(unite_insert_leave)
-  "入力モードのときctrl+wでバックスラッシュも削除
-  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-  "ctrl+jで縦に分割して開く
-  nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-  inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-  "ctrl+jで横に分割して開く
-  nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-  inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-  "ctrl+oでその場所に開く
-  nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-  inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+    nmap <buffer> <ESC> <Plug>(unite_exit)
+    "入力モードのときjjでノーマルモードに移動
+    imap <buffer> jj <Plug>(unite_insert_leave)
+    "入力モードのときctrl+wでバックスラッシュも削除
+    imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+
+    let l:unite = unite#get_current_unite()
+    if l:unite.buffer_name ==# 'files'
+      "ctrl+jで縦に分割して開く
+      nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+      inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+      "ctrl+jで横に分割して開く
+      nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+      inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+      "ctrl+oでその場所に開く
+      nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+      inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+    end
+  endfunction
 
 endif
 ""}}}
