@@ -89,6 +89,7 @@ elseif neobundle#is_installed('neocomplcache.vim')
   inoremap <expr><C-e> neocomplcache#cancel_popup()
 endif
 
+""tagbar {{{
 if neobundle#is_installed('tagbar')
   nmap <F8> :TagbarToggle<CR>
   "tagbarでcssもサポートする
@@ -100,7 +101,22 @@ if neobundle#is_installed('tagbar')
         \ 'i:identities'
         \ ]
         \ }
+  let g:tagbar_type_make = {
+              \ 'kinds':[
+                  \ 'm:macros',
+                  \ 't:targets'
+              \ ]
+              \}
+  let g:tagbar_type_markdown = {
+      \ 'ctagstype' : 'markdown',
+      \ 'kinds' : [
+          \ 'h:Heading_L1',
+          \ 'i:Heading_L2',
+          \ 'k:Heading_L3'
+      \ ]
+      \ }
 endif
+""}}}
 
 ""{{{ The-NERD-tree
 if neobundle#is_installed('The-NERD-tree')

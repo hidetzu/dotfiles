@@ -5,6 +5,7 @@ DOT_FILES=(
 .tmux.conf
 .vimrc
 .vim
+.ctags
 )
 
 for file in ${DOT_FILES[@]}
