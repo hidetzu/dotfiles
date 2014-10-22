@@ -19,6 +19,8 @@ set shiftwidth=4
 " タブの入力はタブのままにする。ファイルタイプごとに設定する。
 set noexpandtab
 
+let mapleader = ","                    " キーマップリーダー
+
 "------------------------------
 " キーマップ
 "-------------------------------
@@ -67,28 +69,3 @@ augroup END
 augroup vim_help
   autocmd FileType vim setlocal keywordprg=:help
 augroup END
-
-function! IncludeGuard()
-  try
-    let l:filepath = expand('%')
-    let l:extension = fnamemodify(l:filepath, ':e')
-    if match(l:extension, "h") == -1
-      throw "Extension Error"
-    endif
-
-    let l:name = toupper(fnamemodify(l:filepath,':t'))
-    let l:included = '__'.substitute(l:name,'\.','_','g').'_INCLUDED__'
-
-    let l:res = {
-                \ "head": '#ifndef '.l:included."\n#define ".l:included."\n\n",
-                \ 'foot': "\n".'#endif /* '.l:included." */"
-                \}
-    silent! execute '1s/^/\=l:res.head/'
-    silent! execute '$s/$/\=l:res.foot/'
-
-  catch /Extension Error/
-    echom "Extension Error"
-  endtry
-endfunction
-
-let mapleader = ","
