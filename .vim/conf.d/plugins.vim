@@ -173,9 +173,9 @@ if neobundle#is_installed('vim-indent-guides')
   " 自動カラー無効
   let g:indent_guides_auto_colors=0
   " 奇数番目のインデントの色
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=110
+"  autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=110
   " 偶数番目のインデントの色
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=140
+"  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=140
   " ハイライト色の変化の幅
   let g:indent_quides_color_change_percent = 30
   " ガイドの幅

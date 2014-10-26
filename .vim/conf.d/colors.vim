@@ -2,20 +2,18 @@
 " Colors
 "------------------------------------------------
 
-set t_Co=256
-syntax on
-
 if neobundle#is_installed('jellybeans.vim')
   colorscheme jellybeans
 
-  " 本当はこんな感じで設定できるはず
   let g:jellybeans_overrides = {
-        \   'Pmenu' :        { 'ctermbg' : 'Black', 'ctermfg' : 'Yellow'},
-        \   'PmenuSel' :     { 'ctermbg' : '211', 'ctermfg' : '0'},
-        \   'PmenuSbar' :    { 'ctermbg' : '159'},
-        \   'PmenuThumb' :   { 'ctermfg' : '255'},
+        \   'Pmenu' :        { '256ctermbg' : 159, '256ctermfg' : 0},
+        \   'PmenuSel' :     { '256ctermbg' : 211, '256ctermfg' : 0},
+        \   'PmenuSbar' :    { '256ctermbg' : 159},
+        \   'PmenuThumb' :   { '256ctermfg' : 255},
         \}
-  
+else 
+  set  background=dark
+
   augroup pmenu_color
     autocmd!
     hi Pmenu        ctermbg=159    ctermfg=0     "ノーマルアイテム
@@ -23,5 +21,9 @@ if neobundle#is_installed('jellybeans.vim')
     hi PmenuSbar    ctermbg=159                  "スクロールバー
     hi PmenuThumb   ctermfg=255                  "スクロールバーのレバー
   augroup END
-
 endif
+
+set t_Co=256
+syntax on
+
+

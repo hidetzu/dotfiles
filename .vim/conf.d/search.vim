@@ -7,9 +7,7 @@ set hlsearch
 
 set history=1000
 
-nmap <silent> <Esc><Esc> :nohls<CR><Esc>
 vmap X y/<C-R>"<CR>
-
 
 augroup search_grep
   set grepprg=grep\ -rnIH\ --exclude-dir=.svn\ --exclude-dir=.git

@@ -1,5 +1,5 @@
 "--------------------------------
-" システム設定
+" 基本設定
 "--------------------------------
 " バックアップ/スワップファイルを作成する/しない
 set nobackup
@@ -18,12 +18,15 @@ set tabstop=4
 set shiftwidth=4
 " タブの入力はタブのままにする。ファイルタイプごとに設定する。
 set noexpandtab
+set vb t_vb=                             "ビープ音なし
+
 
 let mapleader = ","                    " キーマップリーダー
 
 "------------------------------
 " キーマップ
 "-------------------------------
+nmap <silent> <Esc><Esc> :nohls<CR><Esc>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
