@@ -274,6 +274,9 @@ if neobundle#is_installed('unite.vim')
 
   nnoremap <silent> [unite]g :<C-u>Unite<Space>grep -buffer-name=grep<CR>
   nnoremap <silent> [unite]gn :<C-u>Unite<Space>grep -buffer-name=grep -no-quit<CR>
+  nnoremap <silent> [unite]gc :<C-u>UniteWithCursorWord -no-quit line<CR>
+
+
 
   nnoremap <silent> [unite]w :<C-u>Unite<Space> -buffer-name=window window<CR>
 
@@ -317,6 +320,7 @@ if neobundle#is_installed('unite.vim')
   \    "command_candidates" : [
   \     ["tagbar",  "TagbarToggle"],
   \     ["nerdtree", "NERDTreeToggle"],
+  \     ["syntastic ", "SyntasticToggleMode"],
   \   ],
   \   },
   \}
@@ -333,16 +337,16 @@ if neobundle#is_installed('unite.vim')
     imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
 
     let l:unite = unite#get_current_unite()
-    if l:unite.buffer_name ==# 'files'
+    if l:unite.buffer_name ==# '^files'
       "ctrl+jで縦に分割して開く
-      nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-      inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+      nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
+      inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
       "ctrl+jで横に分割して開く
-      nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-      inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+      nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
+      inoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
       "ctrl+oでその場所に開く
-      nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-      inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+      nnoremap <silent><buffer><expr> <C-o> unite#do_action('open')
+      inoremap <silent><buffer><expr> <C-o> unite#do_action('open')
     end
   endfunction
 
