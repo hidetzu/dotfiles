@@ -184,13 +184,27 @@ endif
 
 "" quickrun {{
 if neobundle#is_installed("vim-quickrun")
+  nnoremap <silent> <Leader>r :<C-u>QuickRun<CR>
+  nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
+  
   let g:quickrun_config = get(g:, 'quickrun_config', {})
   " vimproc を使って非同期に実行し，結果を quickfix に出力する
-  let g:quickrun_config._ = {
-              \ 'outputter' : 'quickfix',
-              \ 'runner' : 'vimproc'
-              \ }
   let g:quickrun_config = {
+              \ '_': {
+              \   "hook/close_unite_quickfix/enable_hook_loaded" : 1,
+              \   "hook/unite_quickfix/enable_failure" : 1,
+              \   "hook/close_quickfix/enable_exit" : 1,
+              \   "hook/close_buffer/enable_failure" : 1,
+              \   "hook/close_buffer/enable_empty_data" : 1,
+              \   "outputter" : "multi:buffer:quickfix",
+              \   "hook/shabadoubi_touch_henshin/enable" : 1,
+              \   "hook/shabadoubi_touch_henshin/wait" : 20,
+              \   "outputter/buffer/split" : "",
+              \   "outputter/buffer/into" : 1,
+              \   "outputter/buffer/running_mark" : "",
+              \   "runner" : "vimproc",
+              \   "runner/vimproc/updatetime" : 40,
+              \   },
               \ 'c' : {
               \   'command' : 'gcc',
               \   'cmdopt'  : '-Wall -Wextra',
@@ -202,8 +216,15 @@ if neobundle#is_installed("vim-quickrun")
               \   'outputter' : 'quickfix',
               \   'runner' : 'vimproc'
               \   },
-              \}
-
+              \ 'sed': {},
+              \ 'sh': {},
+              \ 'vim': {
+              \   'command': ':source',
+              \   'exec': '%C %s',
+              \   'hook/eval/template': "echo %s",
+              \   'runner': 'vimscript',
+              \   },
+              \ }
 endif
 ""}}
 
@@ -276,13 +297,8 @@ if neobundle#is_installed('unite.vim')
   nnoremap <silent> [unite]gn :<C-u>Unite<Space>grep -buffer-name=grep -no-quit<CR>
   nnoremap <silent> [unite]gc :<C-u>UniteWithCursorWord -no-quit line<CR>
 
-
-
   nnoremap <silent> [unite]w :<C-u>Unite<Space> -buffer-name=window window<CR>
-
   nnoremap <silent> [unite]hy :<C-u>Unite<Space> -buffer-name=register history/yank<CR>
-
-
 
   nnoremap <silent> [unite]a :<C-u>Unite<Space>buffer file file_mru bookmark<CR>
 
@@ -339,14 +355,14 @@ if neobundle#is_installed('unite.vim')
     let l:unite = unite#get_current_unite()
     if l:unite.buffer_name ==# '^files'
       "ctrl+jで縦に分割して開く
-      nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
-      inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
+"      nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
+"      inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
       "ctrl+jで横に分割して開く
-      nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
-      inoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
+"      nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
+"      inoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
       "ctrl+oでその場所に開く
-      nnoremap <silent><buffer><expr> <C-o> unite#do_action('open')
-      inoremap <silent><buffer><expr> <C-o> unite#do_action('open')
+"      nnoremap <silent><buffer><expr> <C-o> unite#do_action('open')
+"      inoremap <silent><buffer><expr> <C-o> unite#do_action('open')
     end
   endfunction
 
