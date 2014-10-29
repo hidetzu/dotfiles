@@ -20,6 +20,13 @@ set shiftwidth=4
 set noexpandtab
 set vb t_vb=                             "ビープ音なし
 
+" Set English mode
+if IsWindows()
+  lan mes en
+elseif IsLinux()
+  lan mes C
+endif
+
 
 let mapleader = ","                    " キーマップリーダー
 

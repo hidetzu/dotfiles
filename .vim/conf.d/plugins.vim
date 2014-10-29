@@ -124,7 +124,7 @@ if neobundle#is_installed('The-NERD-tree')
   let NERDTreeShowHidden = 1
   " デフォルトでツリーを表示させる
   autocmd VimEnter * execute 'NERDTree'
-  nnoremap <f2> :NERDTreeToggle<CR>
+  nnoremap <silent><f2> :NERDTreeToggle<CR>
 
   " 無視するファイルを設定する
   let g:NERDTreeIgnore=['\.git$', '\.svn$', '\.bak$', '\.swp$', '\~$']
@@ -320,24 +320,39 @@ if neobundle#is_installed('unite.vim')
   \   "shortcut" : {
   \    "description" : "unite-shortcut",
   \    "command_candidates" : [
-  \          ["edit vimrc", "edit $MYVIMRC"],
-  \          ["edit vim_config", "UniteWithInput file -no-quit -input=$HOME/.vim/conf.d/ -no-here"],
-  \          ["edit gvimrc", "edit $MYGVIMRC"],
-  \          ["load vimrc", "so  $MYVIMRC"],
-  \          ["load gvimrc", "so $MYGVIMRC"],
-  \          ["unite-file_mru", "Unite file_mru"],
-  \          ["Unite Beautiful Attack", "Unite -auto-preview colorscheme"],
-  \          ["unite-output:message", "Unite output:message"],
+  \       ["edit vimrc", "edit $MYVIMRC"],
+  \       ["edit vim_config", "UniteWithInput file -no-quit -input=$HOME/.vim/conf.d/ -no-here"],
+  \       ["edit gvimrc", "edit $MYGVIMRC"],
+  \       ["load vimrc", "so  $MYVIMRC"],
+  \       ["load gvimrc", "so $MYGVIMRC"],
+  \       ["unite-file_mru", "Unite file_mru"],
+  \       ["Unite Beautiful Attack", "Unite -auto-preview colorscheme"],
+  \       ["unite-output:message", "Unite output:message"],
   \      ],
   \   },
   \
   \   "toggle_options" : {
   \    "description" : "unite-toggle-options",
   \    "command_candidates" : [
-  \     ["tagbar",  "TagbarToggle"],
-  \     ["nerdtree", "NERDTreeToggle"],
-  \     ["syntastic ", "SyntasticToggleMode"],
-  \   ],
+  \       ["tagbar",  "TagbarToggle"],
+  \       ["nerdtree", "NERDTreeToggle"],
+  \       ["syntastic ", "SyntasticToggleMode"],
+  \     ],
+  \   },
+  \   "encoding" : {
+  \    "description" : "open with a specific character set.",
+  \    "command_candidates" : [
+  \       ["utf-8", "Utf8"], 
+  \       ["iso2022jp", "Iso2022jp"], 
+  \       ["cp932", "Cp932"], 
+  \     ],
+  \   },
+  \   "fileformat" : {
+  \    "description" : "change file format option",
+  \    "command_candidates" : [
+  \       ["unix", "Unix"], 
+  \       ["dos", "Dos"], 
+  \    ],
   \   },
   \}
 
