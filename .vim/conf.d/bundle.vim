@@ -31,7 +31,9 @@ NeoBundle 'Shougo/vimproc', {
     \ 'unix' : 'make -f make_unix.mak',
   \ },
 \ }
-NeoBundle 'Shougo/neomru.vim'
+
+NeoBundle 'Shougo/neomru.vim',
+      \{ 'depends' : 'Shougo/unite.vim'}
 NeoBundle 'Shougo/unite-build.git'
 NeoBundle 'tsukkee/unite-tag.git'
 

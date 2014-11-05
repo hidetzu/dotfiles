@@ -241,6 +241,24 @@ if neobundle#is_installed('syntastic')
     endif
 ""}}}
 
+"" vim-watchdogs {{{
+if neobundle#is_installed('vim-watchdogs')
+
+"  let g:quickrun_config = {
+"              \ 'watchdogs_checker/_': {
+"              \     'outputter/quickfix/open_cmd' : '',
+"              \   },
+"              \}
+"  call watchdogs#setup(g:quickrun_config)
+  augroup Watchdogs
+      autocmd!
+      autocmd BufWritePost *.c,*.cpp WatchdogsRun
+  augroup END
+
+
+endif
+""}}}
+
 "" lightline.vim {{{
 if neobundle#is_installed('lightline.vim')
   let g:lightline = {
@@ -290,7 +308,7 @@ if neobundle#is_installed('unite.vim')
   " unite.vim keymap
   nnoremap [unite]u  :<C-u>Unite-no-split<Space>
   nnoremap <silent> [unite]f :<C-u>Unite<Space> -buffer-name=files file<CR>
-  nnoremap <silent> [unite]m :<C-u>Unite<Space> -buffer-name==files file_mru<CR>
+  nnoremap <silent> [unite]m :<C-u>Unite<Space> -buffer-name=files file_mru<CR>
   nnoremap <silent> [unite]b :<C-u>Unite<Space> -buffer-name=buffer buffer<CR>
 
   nnoremap <silent> [unite]g :<C-u>Unite<Space>grep -buffer-name=grep<CR>
@@ -356,9 +374,9 @@ if neobundle#is_installed('unite.vim')
   \   },
   \}
 
-  autocmd FileType unite call s:unite_my_setting()
+  autocmd FileType unite call s:unite_my_settings()
 
-  function! s:unite_my_setting()
+  function! s:unite_my_settings()
 
     "ESCでuniteを終了
     nmap <buffer> <ESC> <Plug>(unite_exit)
@@ -368,16 +386,19 @@ if neobundle#is_installed('unite.vim')
     imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
 
     let l:unite = unite#get_current_unite()
-    if l:unite.buffer_name ==# '^files'
-      "ctrl+jで縦に分割して開く
-"      nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
-"      inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
-      "ctrl+jで横に分割して開く
-"      nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
-"      inoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
+    echon l:unite.buffer_name
+    if l:unite.buffer_name ==# 'files'
+      nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+      inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+      " ウィンドウを縦に分割して開く
+      nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+      inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+
       "ctrl+oでその場所に開く
-"      nnoremap <silent><buffer><expr> <C-o> unite#do_action('open')
-"      inoremap <silent><buffer><expr> <C-o> unite#do_action('open')
+      nnoremap <silent><buffer><expr> <C-o> unite#do_action('open')
+      inoremap <silent><buffer><expr> <C-o> unite#do_action('open')
+    elseif l:unite.buffer_name ==# 'grep'
+     nnoremap <silent><buffer><expr> r unite#do_action('replace') 
     end
   endfunction
 
