@@ -262,7 +262,7 @@ endif
 "" lightline.vim {{{
 if neobundle#is_installed('lightline.vim')
   let g:lightline = {
-        \ 'colorscheme': 'jellybeans',
+        \ 'colorscheme': 'landscape',
         \ 'active': {
         \ 'left': [
         \   ['mode', 'paste'],

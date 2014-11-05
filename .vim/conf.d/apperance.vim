@@ -30,29 +30,29 @@ if has('syntax')
 endif
 
 " アクティブウィンドウに限りカーソル行(列)を強調する
-augroup vimrc_set_cursorline_only_active_window
-  autocmd!
-  highlight CursorLine ctermbg=232  | highlight CursorColumn ctermbg=232
-  highlight CursorColumn  ctermbg=232  | highlight CursorColumn ctermbg=232
-
-  function! s:activeCursorlineColum()
-    let l:ignore_buffer_type_list=[
-      \ "nofile",
-      \ "quickfix",
-      \ "help",
-      \]
-
-    let l:current_buftype=getbufvar(winbufnr(0), '&buftype')
-    if index(l:ignore_buffer_type_list, l:current_buftype) >= 0
-      return
-    endif
-
-    setlocal cursorline! cursorcolumn!
-  endfunction
-  autocmd VimEnter,BufWinEnter,WinEnter * call s:activeCursorlineColum()
-  autocmd WinLeave * setlocal nocursorline  nocursorcolumn
-  command! -nargs=0 -bar CursorLineToggle :setlocal cursorline! cursorcolumn!
-augroup END
+"augroup vimrc_set_cursorline_only_active_window
+"  autocmd!
+"  highlight CursorLine ctermbg=232  | highlight CursorColumn ctermbg=232
+"  highlight CursorColumn  ctermbg=232  | highlight CursorColumn ctermbg=232
+"
+"  function! s:activeCursorlineColum()
+"    let l:ignore_buffer_type_list=[
+"      \ "nofile",
+"      \ "quickfix",
+"      \ "help",
+"      \]
+"
+"    let l:current_buftype=getbufvar(winbufnr(0), '&buftype')
+"    if index(l:ignore_buffer_type_list, l:current_buftype) >= 0
+"      return
+"    endif
+"
+"    setlocal cursorline! cursorcolumn!
+"  endfunction
+"  autocmd VimEnter,BufWinEnter,WinEnter * call s:activeCursorlineColum()
+"  autocmd WinLeave * setlocal nocursorline  nocursorcolumn
+"  command! -nargs=0 -bar CursorLineToggle :setlocal cursorline! cursorcolumn!
+"augroup END
 
 "myautocmdグループのautocommandをすべて削除する
 augroup myautocmd

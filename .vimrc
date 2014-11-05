@@ -23,17 +23,23 @@ function! s:source_config(path)
   execute 'source' fnameescape(expand('~/.vim/conf.d/' . a:path))
 endfunction
 
-" basic
-call s:source_config('basic.vim')
-call s:source_config('apperance.vim')
-call s:source_config('bundle.vim')
-call s:source_config('colors.vim')
-call s:source_config('encoding.vim')
-call s:source_config('indent.vim')
-call s:source_config('plugins.vim')
-call s:source_config('quickfix.vim')
-call s:source_config('search.vim')
-call s:source_config('statusline.vim')
+set path+=$HOME/.vim/conf.d/
+
+let s:configs=[
+      \ 'basic.vim',
+      \ 'apperance.vim',
+      \ 'bundle.vim',
+      \ 'colors.vim',
+      \ 'encoding.vim',
+      \ 'indent.vim',
+      \ 'plugins.vim',
+      \ 'quickfix.vim',
+      \ 'search.vim',
+      \ 'statusline.vim',
+      \]
+for s:config in s:configs
+  call s:source_config(s:config)
+endfor
 
 
 "set runtimepath+=~/.vim

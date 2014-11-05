@@ -37,6 +37,13 @@ NeoBundle 'Shougo/neomru.vim',
 NeoBundle 'Shougo/unite-build.git'
 NeoBundle 'tsukkee/unite-tag.git'
 
+" qfreplace : Quickfixを利用した一斉置換
+NeoBundleLazy 'thinca/vim-qfreplace', {
+  \ 'autoload' : {
+  \ 'filetypes' : ['unite', 'quickfix'],
+  \ }
+\ }
+
 "NeoBundleLazy 'alpaca-tc/alpaca_tags', {
 "              \    'depends': ['Shougo/vimproc'],
 "              \    'autoload' : {
@@ -56,6 +63,8 @@ NeoBundle 'itchyny/lightline.vim'
 
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'itchyny/landscape.vim'
+
 call neobundle#end()
 
 NeoBundleCheck
