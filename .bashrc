@@ -13,6 +13,7 @@ if [ -x `which vim` ]; then
 fi
 
 export EDITOR=vim
+set -o vi
 
 # set term colors
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
