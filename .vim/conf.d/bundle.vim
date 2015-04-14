@@ -17,7 +17,12 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle has('lua') ? 'Shougo/neocomplete.vim' : 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
+
+"git 関連プラグイン
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'cohama/agit.vim'
+NeoBundle 'idanarye/vim-merginal'
+
 NeoBundle 'The-NERD-tree'
 
 NeoBundle 'mattn/webapi-vim'
@@ -60,6 +65,7 @@ NeoBundle 'scrooloose/syntastic'
 
 "ステータスライン
 NeoBundle 'itchyny/lightline.vim'
+
 
 "カラースキーマ
 NeoBundle 'nanotech/jellybeans.vim'
