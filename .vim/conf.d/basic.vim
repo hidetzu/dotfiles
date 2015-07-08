@@ -27,6 +27,12 @@ elseif IsLinux()
   lan mes C
 endif
 
+"--------------------------------
+" スペルチェック
+"--------------------------------
+set spelllang=en,cjk
+set spell
+
 
 let mapleader = ","                    " キーマップリーダー
 
