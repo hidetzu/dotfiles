@@ -5,6 +5,8 @@
 set nobackup
 " swpファイルを作成しない
 set noswapfile
+set noundofile
+
 " backspaceキーの挙動を設定する
 " indent : 行頭の空白の削除を許す
 " eol : 改行の削除を許す
@@ -18,7 +20,9 @@ set tabstop=4
 set shiftwidth=4
 " タブの入力はタブのままにする。ファイルタイプごとに設定する。
 set noexpandtab
-set vb t_vb=                             "ビープ音なし
+"ビープ音なし
+set noeb vb t_vb=
+
 
 " Set English mode
 if IsWindows()
@@ -30,8 +34,8 @@ endif
 "--------------------------------
 " スペルチェック
 "--------------------------------
-set spelllang=en,cjk
-set spell
+"set spelllang=en,cjk
+"set spell
 
 
 let mapleader = ","                    " キーマップリーダー
@@ -70,7 +74,7 @@ augroup myvimrc
     if bufexists(a:path)
       let l:winnr = bufwinnr(a:path)
       if l:winnr <= 0
-        let l:winnr = 1
+        let l:winnr = 0
       endif
       execute l:winnr .'wincmd w'
     else

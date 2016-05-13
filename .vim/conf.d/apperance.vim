@@ -55,7 +55,7 @@ endif
 "augroup END
 
 "myautocmdグループのautocommandをすべて削除する
-augroup myautocmd
-  autocmd!
+"augroup myautocmd
+"  autocmd!
 "  autocmd VimEnter,WinEnter * match Error /\s\+$/
-augroup END
+"augroup END
