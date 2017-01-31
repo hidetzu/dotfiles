@@ -24,7 +24,6 @@ function! s:source_config(path)
 endfunction
 
 set path+=$HOME/.vim/conf.d/
-
 let s:configs=[
       \ 'basic.vim',
       \ 'apperance.vim',

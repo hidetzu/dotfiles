@@ -123,8 +123,8 @@ if neobundle#is_installed('The-NERD-tree')
   " 隠しファイルをデフォルトで表示させる
   let NERDTreeShowHidden = 1
   " デフォルトでツリーを表示させる
-  autocmd VimEnter * execute 'NERDTree'
-  nnoremap <silent><f2> :NERDTreeToggle<CR>
+  "autocmd VimEnter * execute 'NERDTree'
+  "nnoremap <silent><f2> :NERDTreeToggle<CR>
 
   " 無視するファイルを設定する
   let g:NERDTreeIgnore=['\.git$', '\.svn$', '\.bak$', '\.swp$', '\~$']

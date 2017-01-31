@@ -10,6 +10,8 @@ endif
 "neobundle.vimの初期化
 call neobundle#begin(expand('~/.vim/bundle/'))
 
+let g:vimproc#download_windows_dll = 1
+
 "neobundle.vimを更新するための設定
 NeoBundleFetch 'Shougo/neobundle.vim'
 
