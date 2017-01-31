@@ -12,8 +12,8 @@ set ambiwidth =double
 set pastetoggle=<f5>
 
 "タブ、空白、改行の可視化
-set list
-set listchars=tab:>-
+"set list
+""set listchars=tab:>-
 
 "全角スペースをハイライト表示
 function! ZenkakuSpace()
