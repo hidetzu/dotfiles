@@ -73,6 +73,9 @@ NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'itchyny/landscape.vim'
 
+" golang
+NeoBundle 'fatih/vim-go'
+
 call neobundle#end()
 
 NeoBundleCheck
