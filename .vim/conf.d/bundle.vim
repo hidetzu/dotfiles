@@ -1,3 +1,10 @@
+"if &compatible
+"  set nocompatible
+"endif
+"set runtimepath+=$HOME/.vim/bundle/dein.vim/
+
+
+
 "-------------------------------
 " NeoBundleで管理するプラグイン
 "-------------------------------
