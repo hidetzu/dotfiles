@@ -2,7 +2,7 @@
 " Colors
 "------------------------------------------------
 
-if neobundle#is_installed('jellybeans.vim')
+if dein#tap('jellybeans.vim')
   colorscheme jellybeans
 
 "  let g:jellybeans_overrides = {

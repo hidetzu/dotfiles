@@ -1,0 +1,49 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'majutsushi/tagbar'
+
+[[plugins]]
+repo = 'Shougo/neocomplete.vim'
+
+[[plugins]]
+repo = 'Shougo/neosnippet'
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
+repo = 'The-NERD-tree'
+
+[[plugins]]
+repo = 'Shougo/unite.vim'
+
+[[plugins]]
+repo = 'Shougo/vimproc'
+
+[[plugins]]
+repo = 'Shougo/neomru'
+
+[[plugins]]
+repo = 'thinca/vim-qfreplace'
+
+###################
+# Colors
+[[plugins]]
+repo = 'nanotech/jellybeans.vim'
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+
+[[plugins]]
+repo = 'itchyny/landscape.vim'
+
+###################
+# golang
+[[plugins]]
+repo = 'fatih/vim-go'
+

@@ -2,7 +2,7 @@
 " プラグインの設定
 "-------------------------------
 
-if neobundle#is_installed('neocomplete.vim')
+if dein#tap('neocomplete.vim')
   " neocomplete用設定
   let g:acp_enableAtStartup = 0
   " 起動時に有効化
@@ -49,7 +49,7 @@ if neobundle#is_installed('neocomplete.vim')
   " 現在選択している候補をキャンセルし、ポップアップを閉じます
   inoremap <expr><C-e> neocomplete#cancel_popup()
 
-elseif neobundle#is_installed('neocomplcache.vim')
+elseif dein#tap('neocomplcache.vim')
   " neocomplcache用設定
   let g:acp_enableAtStartup = 0
   " 起動時に有効化
@@ -88,9 +88,9 @@ elseif neobundle#is_installed('neocomplcache.vim')
   " 現在選択している候補をキャンセルし、ポップアップを閉じます
   inoremap <expr><C-e> neocomplcache#cancel_popup()
 endif
-
+"
 ""tagbar {{{
-if neobundle#is_installed('tagbar')
+if dein#tap('tagbar')
   nmap <F8> :TagbarToggle<CR>
   "tagbarでcssもサポートする
   let g:tagbar_type_css = {
@@ -118,8 +118,9 @@ if neobundle#is_installed('tagbar')
 endif
 ""}}}
 
+
 ""{{{ The-NERD-tree
-if neobundle#is_installed('The-NERD-tree')
+if dein#tap('The-NERD-tree')
   " 隠しファイルをデフォルトで表示させる
   let NERDTreeShowHidden = 1
   " デフォルトでツリーを表示させる
@@ -138,7 +139,7 @@ if neobundle#is_installed('The-NERD-tree')
 endif
 ""}}}
 
-if neobundle#is_installed('neosnippet')
+if dein#tap('neosnippet')
   " Enable snipMate compatibility feature.
   let g:neosnippet#enable_snipmate_compatibility = 1
   " Tell Neosnippet about the other snippets
@@ -164,7 +165,7 @@ if neobundle#is_installed('neosnippet')
 endif
 
 
-if neobundle#is_installed('vim-indent-guides')
+if dein#tap('vim-indent-guides')
   " vim-indent-guides
   " Vim 起動時 vim-indent-guides を自動起動
   let g:indent_guides_enable_on_vim_startup=1
@@ -183,7 +184,7 @@ if neobundle#is_installed('vim-indent-guides')
 endif
 
 "" quickrun {{
-if neobundle#is_installed("vim-quickrun")
+if dein#tap("vim-quickrun")
   nnoremap <silent> <Leader>r :<C-u>QuickRun<CR>
   nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
   
@@ -229,7 +230,7 @@ endif
 ""}}
 
 "" syntastic {{{
-if neobundle#is_installed('syntastic')
+if dein#tap('syntastic')
   augroup AutoSyntastic
       autocmd!
         autocmd BufWritePost *.c,*.cpp call s:syntastic()
@@ -241,26 +242,8 @@ if neobundle#is_installed('syntastic')
     endif
 ""}}}
 
-"" vim-watchdogs {{{
-if neobundle#is_installed('vim-watchdogs')
-
-"  let g:quickrun_config = {
-"              \ 'watchdogs_checker/_': {
-"              \     'outputter/quickfix/open_cmd' : '',
-"              \   },
-"              \}
-"  call watchdogs#setup(g:quickrun_config)
-  augroup Watchdogs
-      autocmd!
-      autocmd BufWritePost *.c,*.cpp WatchdogsRun
-  augroup END
-
-
-endif
-""}}}
-
 "" lightline.vim {{{
-if neobundle#is_installed('lightline.vim')
+if dein#tap('lightline.vim')
   let g:lightline = {
         \ 'colorscheme': 'landscape',
         \ 'active': {
@@ -297,7 +280,7 @@ endif
 
 
 "" unite.vim {{{
-if neobundle#is_installed('unite.vim')
+if dein#tap('unite.vim')
    " The prefix key.
   nnoremap    [unite]   <Nop>
   nmap    <Leader>f [unite]
@@ -406,7 +389,7 @@ endif
 ""}}}
 
 "" neomru.vim {{{
-if neobundle#is_installed('neomru.vim')
+if dein#tap('neomru.vim')
   let g:neomru#time_format="(%Y/%m/%d %H:%M:%S) "
 endif
 ""}}}

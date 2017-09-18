@@ -24,6 +24,18 @@ function! s:source_config(path)
 endfunction
 
 set path+=$HOME/.vim/conf.d/
+"let s:configs=[
+"      \ 'basic.vim',
+"      \ 'apperance.vim',
+"      \ 'bundle.vim',
+"      \ 'colors.vim',
+"      \ 'encoding.vim',
+"      \ 'indent.vim',
+"      \ 'plugins.vim',
+"      \ 'quickfix.vim',
+"      \ 'search.vim',
+"      \ 'statusline.vim',
+"      \]
 let s:configs=[
       \ 'basic.vim',
       \ 'apperance.vim',
@@ -31,7 +43,6 @@ let s:configs=[
       \ 'colors.vim',
       \ 'encoding.vim',
       \ 'indent.vim',
-      \ 'plugins.vim',
       \ 'quickfix.vim',
       \ 'search.vim',
       \ 'statusline.vim',
