@@ -6,7 +6,7 @@ This is hidetzu's dotfiles.
 ## Install
 
 	$mkdir ~/dotfiles
-	$git clone https://github.com/hidetzu/dotfiles.git
+        $git clone --recursive hhtps://github.com/hidetzu/dotofiles.git
 
 ## Update
 
