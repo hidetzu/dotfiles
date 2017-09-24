@@ -40,5 +40,3 @@ if [ $git_include_use -eq 1 ]; then
 else
   echo ".gitconfig skiped "
 fi
-
-[ ! -d ~/.vim/bundle ] && mkdir -p ~/.vim/bundle && git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim && echo "you should run following command to setup plugins -> vim -c ':NeoBundleInstall'"
