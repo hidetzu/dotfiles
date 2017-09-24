@@ -17,7 +17,7 @@ repo = 'Shougo/neosnippet-snippets'
 repo = 'tpope/vim-fugitive'
 
 [[plugins]]
-repo = 'The-NERD-tree'
+repo = 'scrooloose/nerdtree'
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
