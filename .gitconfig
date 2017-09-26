@@ -4,3 +4,6 @@
 	ui = auto
 [core]
 	editor = vim
+[credential]
+	helper = !aws --profile CodeCommitProfile codecommit credential-helper $@
+	UseHttpPath = true
