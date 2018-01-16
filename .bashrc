@@ -26,6 +26,7 @@ fi
 alias bfwrite="cat > .simple_clipboard"
 alias bfcat="cat ~/.simple_clipboard"
 
+
 if [ -e ~/.bashrc.local ]; then
   source ~/.bashrc.local
 fi
