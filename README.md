@@ -151,10 +151,6 @@ A global `commit-msg` hook (`core.hooksPath = ~/.config/git/hooks`) enforces [Co
 
 To opt a repository out: `git config core.hooksPath .git/hooks`.
 
-### Auto-merge
-
-`auto-merge.yml` turns on squash auto-merge for the owner's own pull requests and deletes the branch after the merge. It refuses to run unless `main` has a ruleset with these required checks: `shellcheck`, `deploy (arch-devhost)`, `deploy (macos-client)`, `init-arch-devhost`, with "require branches to be up to date". The repository settings also need **Allow auto-merge** and **Automatically delete head branches**.
-
 ### More
 
 - [docs/arch-gpu.md](docs/arch-gpu.md): yay, NVIDIA drivers, CUDA and Docker GPU support on the devhost
