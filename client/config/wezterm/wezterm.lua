@@ -106,6 +106,31 @@ local function flash_message(window, text)
     render_left_status(window)
 end
 
+-- 直前のコマンドの出力を、ペインの文字からプロンプトを目印に切り出す (semantic zone が取れない SSHMUX のペイン用)。
+-- starship のプロンプト (common/config/starship.toml) は 2 行で、1 行目が "░▒▓" で始まり、2 行目が "❯ コマンド"。
+-- 直前のプロンプトの 2 行目の次から、今のプロンプトの手前までを出力とみなす
+local prompt_mark = "░▒▓"
+local function last_output_by_prompt(pane)
+    local lines = wezterm.split_by_newlines(pane:get_logical_lines_as_text(1000))
+    local starts = {}
+    for i, line in ipairs(lines) do
+        if line:sub(1, #prompt_mark) == prompt_mark then
+            table.insert(starts, i)
+        end
+    end
+    if #starts < 2 then
+        return nil
+    end
+    local out = {}
+    for i = starts[#starts - 1] + 2, starts[#starts] - 1 do
+        table.insert(out, lines[i])
+    end
+    while #out > 0 and out[#out]:match("^%s*$") do
+        table.remove(out)
+    end
+    return table.concat(out, "\n"), #out
+end
+
 config.keys = {
     -- フォントサイズ
     { key = "=", mods = app_mod, action = act.IncreaseFontSize },
@@ -125,20 +150,29 @@ config.keys = {
         }),
     },
     -- 直前コマンド出力をクリップボードへ (要 OSC 133 シェル統合)
-    -- SSHMUX のペインでは使えない: zone は devhost の mux サーバーにあり、mux の通信で client に渡らない
+    -- SSHMUX のペインでは zone が devhost の mux サーバーにあり、mux の通信で client に渡らないので、
+    -- ペインの文字からプロンプトを目印に切り出す (last_output_by_prompt)
     {
         key = "Y",
         mods = "CTRL",
         action = wezterm.action_callback(function(window, pane)
             local zones = pane:get_semantic_zones("Output")
-            if #zones == 0 then
-                flash_message(window, "No output zones (SSHMUX panes have none)")
+            if #zones > 0 then
+                window:copy_to_clipboard(pane:get_text_from_semantic_zone(zones[#zones]))
+                flash_message(window, "Copied last output")
                 return
             end
-            local last = zones[#zones]
-            local text = pane:get_text_from_semantic_zone(last)
+            local text, n = last_output_by_prompt(pane)
+            if not text then
+                flash_message(window, "No previous prompt in the last 1000 lines")
+                return
+            end
+            if n == 0 then
+                flash_message(window, "The previous command printed nothing")
+                return
+            end
             window:copy_to_clipboard(text)
-            flash_message(window, "Copied last output")
+            flash_message(window, string.format("Copied last output (%d lines, by prompt)", n))
         end),
     },
 

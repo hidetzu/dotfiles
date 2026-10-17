@@ -1,5 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# 1 行目の先頭の "░▒▓" は、wezterm.lua の Ctrl+Shift+Y (last_output_by_prompt) が目印にしている。変えるときは両方を直す
 format = """
 [░▒▓](#a3aed2)\
 [  ](bg:#a3aed2 fg:#090c0c)\
