@@ -65,7 +65,7 @@ The leader key is `Ctrl+t`.
 | `LEADER a` / `LEADER d` | attach to / detach from the devhost (`SSHMUX:arch`) |
 | `LEADER v` / `LEADER s` / `LEADER c` | split / new tab, in the current pane's host and directory |
 | `LEADER w` | fuzzy-search the panes in all tabs by host, directory and title |
-| `Ctrl+Shift+Y` | copy the previous command's output (local panes only, via OSC 133) |
+| `Ctrl+Shift+Y` | copy the previous command's output (OSC 133 in local panes; in SSHMUX panes, cut from the pane text at the starship prompt) |
 
 ### Shell and editor
 
