@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# client の WezTerm が SSHMUX ドメインで繋ぐときに起動される wezterm（remote_wezterm_path）。
+# client と同じビルド（wezterm-mux-install で入れたもの）を、mux サーバー用の設定で動かす。
+set -euo pipefail
+
+bin=$HOME/.local/opt/wezterm/current/usr/bin/wezterm
+if [ ! -x "$bin" ]; then
+    echo "wezterm-mux: $bin がありません。client と同じビルドを wezterm-mux-install で入れてください" >&2
+    exit 1
+fi
+export WEZTERM_CONFIG_FILE=$HOME/.config/wezterm-mux/wezterm.lua
+exec "$bin" "$@"

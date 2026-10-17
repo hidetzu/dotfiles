@@ -1,0 +1,11 @@
+# 役割によらず使うもの
+common/config/nvim                   .config/nvim
+common/config/starship.toml          .config/starship.toml
+# git は ~/.gitconfig と ~/.config/git/config の両方を読む。共通の設定はこちら、
+# マシン固有の設定 (credential helper など) は ~/.gitconfig に置く（同じキーは ~/.gitconfig が勝つ）
+common/config/git/config             .config/git/config
+common/config/git/ignore             .config/git/ignore
+# 全リポ共通の commit-msg バリデータ（hooksPath は common/config/git/config で設定）
+common/config/git/hooks/commit-msg   .config/git/hooks/commit-msg
+# fish の関数 (fish_variables はマシン固有なので除外)
+common/config/fish/functions         .config/fish/functions

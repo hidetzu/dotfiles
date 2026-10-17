@@ -1,0 +1,21 @@
+# client (手元の Mac) が使うものだけ。開発ツール (mise / gh / jq など) は devhost 側で入れる。
+# 仕事や個人のアプリは private 層の Brewfile で入れる。
+brew "fish"
+brew "starship"
+brew "git"
+brew "fzf"
+brew "fd"
+brew "ripgrep"
+brew "yazi"
+# 手元で設定ファイルを触る程度の nvim (treesitter のパーサを入れるのに tree-sitter-cli が要る)
+brew "neovim", args: ["HEAD"]
+brew "tree-sitter-cli"
+# devhost の mux サーバーと同じビルドに揃えるため nightly（wezterm-match で確かめる）
+cask "wezterm@nightly"
+cask "font-plemol-jp-nf"
+cask "font-fira-code-nerd-font"
+# VS Code は Remote SSH で devhost に繋ぐ GUI としてだけ使う
+cask "visual-studio-code"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "huytd.tokyo-city"
+vscode "vscode-icons-team.vscode-icons"

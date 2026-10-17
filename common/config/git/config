@@ -1,0 +1,33 @@
+# 誰としてコミットするか ([user]) は、機械ごとのファイルに置く（無ければ git は黙って飛ばす）。
+# 自分の機械では dotfiles-private が張る
+[include]
+	path = ~/.config/git/config.local
+
+[rebase]
+  # rebase 時に自動でstashしてくれる（作業中断を簡単に）
+  autoStash = true
+
+[alias]
+  # よく使うコマンドの短縮エイリアス
+  st = status                                   # git status の短縮
+  co = checkout                                 # git checkout の短縮
+  ci = commit                                   # git commit の短縮
+  br = branch                                   # git branch の短縮
+  pl = pull --rebase --autostash                # 安全に pull するエイリアス
+	lg = log --oneline --graph --all --decorate
+  last = log -1 HEAD                            # 最新コミットを表示
+	pushf = push --force-with-lease --force-if-includes
+	rl = reflog
+
+[core]
+	quotepath = false             # 日本語ファイル名をそのまま表示（%XX エンコードをしない）
+	editor = nvim                 # デフォルトのエディタを Neovim に設定
+	hooksPath = ~/.config/git/hooks  # 全リポジトリ共通フック（dotfiles 管理）
+[merge]
+	tool = vimdiff                # マージ時の比較ツールに vimdiff を使用
+	conflictstyle = diff3         # コンフリクト時に base 情報も含めて表示（3-way merge）
+[mergetool]
+	prompt = false                # マージツール実行時の確認プロンプトを無効化
+
+[pull]
+	rebase = false

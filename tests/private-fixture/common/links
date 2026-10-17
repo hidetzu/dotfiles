@@ -1,0 +1,2 @@
+# CI 用: 非公開リポジトリの links が、そのリポジトリからのパスで張られることを確かめる
+common/config/fixture.txt            .config/dotfiles-private-fixture.txt

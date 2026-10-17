@@ -1,0 +1,11 @@
+# Claude Code (user-level config)。settings.json は deploy.sh で生成する
+devhost/claude/CLAUDE.md             .claude/CLAUDE.md
+# 開発ツール: gh、mise / Go の PATH（config.fish があれば読む）
+devhost/config/gh/config.yml         .config/gh/config.yml
+devhost/config/fish/devhost.fish     .config/fish/devhost.fish
+# プロジェクト名 → 絶対パス（client の dev が ssh 越しに呼ぶ）
+devhost/bin/project-path             .local/bin/project-path
+# client の WezTerm が SSHMUX で繋ぐ mux サーバー（client と同じビルドを wezterm-mux-install で入れる）
+devhost/bin/wezterm-mux              .local/bin/wezterm-mux
+devhost/bin/wezterm-mux-install      .local/bin/wezterm-mux-install
+devhost/config/wezterm/mux.lua       .config/wezterm-mux/wezterm.lua

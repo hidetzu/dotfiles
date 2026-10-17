@@ -1,0 +1,86 @@
+name: auto-merge
+
+# 自分の PR に GitHub 標準の auto-merge (squash) を予約するだけ。マージするのは GitHub で、
+# main のルールセットで必須にした CI がすべて成功したときに限られる（失敗や未完了ならマージされない）。
+# マージ後の head ブランチは、マージを見届けたこの workflow が消す。
+# pull_request_target は使わない（fork の PR では書き込み権限の無いトークンになる）。
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, reopened, synchronize, ready_for_review, converted_to_draft ]
+
+permissions: {}
+
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  enable:
+    # draft でない、同じリポジトリのブランチから、リポジトリの持ち主が出して持ち主が更新した PR だけ
+    if: >-
+      !github.event.pull_request.draft &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login == github.repository_owner &&
+      github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      BASE: ${{ github.event.pull_request.base.ref }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    steps:
+      # 必須チェックが無いと auto-merge は CI を待たずにマージしてしまう。ルールセットで必須にしてあることを確かめる
+      - name: require status checks on base branch
+        run: |
+          checks=$(gh api "repos/$GH_REPO/rules/branches/$BASE" \
+            --jq '[.[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | length')
+          if [ "$checks" -eq 0 ]; then
+            echo "::error::$BASE has no required status checks (ruleset). Refusing to enable auto-merge."
+            exit 1
+          fi
+          echo "$BASE requires $checks status check(s)"
+      - name: enable auto-merge (squash)
+        run: gh pr merge "$PR" --auto --squash
+      # Automatically delete head branches に頼らず、マージを見届けて head ブランチを消す。
+      # 待ちきれなかったのは CI が遅いだけかもしれないので、失敗にせず warning に留める
+      - name: wait for merge and delete head branch
+        run: |
+          for _ in $(seq 1 60); do
+            case "$(gh pr view "$PR" --json state --jq .state)" in
+              MERGED)
+                if gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$HEAD_REF" 2>/dev/null; then
+                  echo "deleted $HEAD_REF"
+                elif ! gh api "repos/$GH_REPO/git/ref/heads/$HEAD_REF" >/dev/null 2>&1; then
+                  echo "$HEAD_REF is already deleted"
+                else
+                  echo "::warning::could not delete $HEAD_REF"
+                fi
+                exit 0
+                ;;
+              CLOSED)
+                echo "PR was closed without merging; keeping $HEAD_REF"
+                exit 0
+                ;;
+            esac
+            sleep 15
+          done
+          echo "::warning::PR was not merged within 15 minutes; $HEAD_REF was not deleted"
+
+  # draft に戻したら予約を取り消す
+  disable:
+    if: github.event.action == 'converted_to_draft'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - run: gh pr merge "$PR" --disable-auto || true

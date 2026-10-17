@@ -1,0 +1,77 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: shellcheck
+        # *.sh と、bin/ の下の拡張子の無いスクリプト (shebang が bash のもの)
+        run: |
+          { git ls-files '*.sh'; git ls-files '*/bin/*' | xargs grep -l '^#!/usr/bin/env bash'; } \
+            | sort -u | xargs shellcheck --severity=error
+
+  # symlink を張り、正しく張れたかと、2 回目も同じ結果になるかを確かめる
+  deploy:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: arch-devhost
+            runs-on: ubuntu-latest
+            container: archlinux:latest
+            role: devhost
+          - name: macos-client
+            runs-on: macos-latest
+            container: ''
+            role: client
+    name: deploy (${{ matrix.name }})
+    runs-on: ${{ matrix.runs-on }}
+    container: ${{ matrix.container }}
+    steps:
+      - name: Install prerequisites (arch)
+        if: matrix.container == 'archlinux:latest'
+        run: pacman -Syu --noconfirm --needed git make diffutils jq
+      - uses: actions/checkout@v5
+      - run: make deploy ROLE="${{ matrix.role }}"
+      - run: make check ROLE="${{ matrix.role }}"
+      - run: make deploy ROLE="${{ matrix.role }}"
+      - run: make check ROLE="${{ matrix.role }}"
+      # 非公開リポジトリがあるときも、links と settings.json の合成が通るか
+      # コンテナのジョブでは ${{ github.workspace }} がホスト側のパスになるので、シェルの $GITHUB_WORKSPACE を使う
+      - name: deploy with private layer
+        run: |
+          export DOTFILES_PRIVATE="$GITHUB_WORKSPACE/tests/private-fixture"
+          make deploy ROLE="${{ matrix.role }}"
+          make check ROLE="${{ matrix.role }}"
+          # settings.json は devhost の役割でだけ作る
+          case " ${{ matrix.role }} " in *" devhost "*) jq -e '.editorMode == "normal"' ~/.claude/settings.json ;; esac
+      # autoMode は機械ごとの物なので、check では比べず、deploy しても消さない
+      - name: keep autoMode across deploy
+        if: contains(matrix.role, 'devhost')
+        run: |
+          export DOTFILES_PRIVATE="$GITHUB_WORKSPACE/tests/private-fixture"
+          tmp=$(mktemp)
+          jq '.autoMode = {"environment": ["$defaults"]}' ~/.claude/settings.json > "$tmp"
+          mv "$tmp" ~/.claude/settings.json
+          make check ROLE="${{ matrix.role }}"
+          make deploy ROLE="${{ matrix.role }}"
+          jq -e '.autoMode.environment == ["$defaults"]' ~/.claude/settings.json
+          ! ls ~/.claude/settings.json.bak.* 2>/dev/null
+
+  # devhost の本命 (Arch) だけ init まで通す。Mac の init は brew bundle と defaults でランナーを書き換えるだけなので通さない
+  init-arch-devhost:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - run: pacman -Syu --noconfirm --needed git make sudo diffutils jq
+      - uses: actions/checkout@v5
+      - run: make init ROLE=devhost
+      - run: make deploy ROLE=devhost
+      - run: make check ROLE=devhost

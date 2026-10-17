@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# client と同じビルドの wezterm を、SSHMUX 用に ~/.local/opt/wezterm/<バージョン> へ入れる。
+#
+#   wezterm-mux-install <バージョン>   client の wezterm --version（例: 20261010-083911-e2a98e1b）
+#
+# 公式 nightly の AppImage を展開し、バージョンが一致したときだけ current を切り替える。
+# nightly は最新しか置かれないので、一致しなければ client も最新の nightly にしてから揃える。
+# pacman の wezterm（devhost で GUI を使う用）には触らない。
+set -euo pipefail
+
+want=${1:-}
+want=${want#wezterm }
+if [ -z "$want" ]; then
+    sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'
+    exit 2
+fi
+
+url=https://github.com/wezterm/wezterm/releases/download/nightly/WezTerm-nightly-Ubuntu26.04.AppImage
+base=$HOME/.local/opt/wezterm
+dest=$base/$want
+
+if [ -x "$dest/usr/bin/wezterm" ]; then
+    echo "==> $want is already installed"
+else
+    tmp=$(mktemp -d)
+    trap 'rm -rf "$tmp"' EXIT
+    echo "==> Downloading $url"
+    curl -fsSL -o "$tmp/wezterm.AppImage" "$url"
+    chmod +x "$tmp/wezterm.AppImage"
+    (cd "$tmp" && ./wezterm.AppImage --appimage-extract >/dev/null)
+    got=$("$tmp/squashfs-root/usr/bin/wezterm" --version | cut -d' ' -f2)
+    if [ "$got" != "$want" ]; then
+        echo "wezterm-mux-install: nightly は $got で、$want ではありません。client も最新の nightly にしてから揃えてください" >&2
+        exit 1
+    fi
+    mkdir -p "$base"
+    mv "$tmp/squashfs-root" "$dest"
+fi
+
+ln -sfn "$want" "$base/current"
+echo "==> current -> $want"
+
+# 動いている mux サーバーは古いビルドのまま。止めるとその中のペインも閉じるので、ここでは止めない
+if pgrep -f '(^|/)wezterm-mux-server( |$)' >/dev/null; then
+    echo "==> wezterm-mux-server is running; to switch to $want, close its panes and run: pkill -f wezterm-mux-server"
+fi

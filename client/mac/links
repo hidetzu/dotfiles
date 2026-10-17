@@ -1,0 +1,2 @@
+# VS Code (GUI)。開発は Remote SSH で devhost に繋ぐので、ここには手元の見た目と Remote SSH の設定だけ
+client/mac/config/vscode/settings.json   Library/Application Support/Code/User/settings.json

@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# devhost のプロジェクトを開く。パスは devhost の project-path で探す。
+#
+#   dev [名前]        nvim で開く（WezTerm の中なら devhost の mux に新しいタブで）
+#   dev -c [名前]     VS Code の Remote SSH で開く
+#
+# 繋ぐ先は $DEV_HOST（既定: arch。~/.ssh/config の Host 名）。名前が 1 つに絞れなければ fzf で選ぶ。
+set -euo pipefail
+
+host=${DEV_HOST:-arch}
+mode=nvim
+while getopts ch opt; do
+    case "$opt" in
+        c) mode=code ;;
+        *) sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+    esac
+done
+shift $((OPTIND - 1))
+name=${1:-}
+
+# 候補は devhost から貰い、選ぶのは手元で（ssh 越しに fzf を動かさない）
+if ! candidates=$(ssh "$host" '~/.local/bin/project-path --list'); then
+    echo "dev: $host から候補を取れませんでした（project-path --list が失敗）" >&2
+    exit 1
+fi
+if [ -n "$name" ]; then
+    matches=$(grep -E "/${name//./\\.}$" <<<"$candidates" || grep -F -- "$name" <<<"$candidates" || true)
+else
+    matches=$candidates
+fi
+if [ -z "$matches" ]; then
+    echo "dev: $host に見つかりません: $name" >&2
+    exit 1
+fi
+path=$(fzf --query "$name" --select-1 --exit-0 <<<"$matches") || exit 1
+
+case "$mode" in
+    code)
+        code=$(command -v code || echo "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code")
+        exec "$code" --remote "ssh-remote+$host" "$path"
+        ;;
+    nvim)
+        # nvim を閉じた後も、そのディレクトリのシェルに残る
+        if [ -n "${WEZTERM_PANE:-}" ] && command -v wezterm >/dev/null; then
+            # SSHMUX のタブなら、そこで分割しても同じディレクトリで開く。
+            # spawn にコマンドを渡すと Mac の環境変数 (HOME など) まで送られるので、
+            # devhost の既定のシェルを開いてから nvim を打ち込む
+            if pane=$(wezterm cli spawn --domain-name "SSHMUX:$host" --cwd "$path"); then
+                printf 'nvim .\r' | wezterm cli send-text --no-paste --pane-id "$pane"
+                exit 0
+            fi
+            echo "dev: SSHMUX:$host に繋げないので ssh で開きます（wezterm-match でビルドを確かめてください）" >&2
+        fi
+        case "$path" in *"'"*) echo "dev: パスに ' を含むものは開けません: $path" >&2; exit 1 ;; esac
+        cmd=(ssh -t "$host" "cd '$path' && exec \$SHELL -l -c 'nvim .; exec \$SHELL -l'")
+        if [ -n "${WEZTERM_PANE:-}" ] && command -v wezterm >/dev/null; then
+            wezterm cli spawn --cwd "$HOME" -- "${cmd[@]}" >/dev/null
+        else
+            exec "${cmd[@]}"
+        fi
+        ;;
+esac

@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Conventional Commits validator. グローバル core.hooksPath 経由で全リポに適用される。
+set -euo pipefail
+
+msg_file="$1"
+
+# 拒否したときだけ記録する。何回弾いたかを後から数えるため。
+reject_log="${XDG_DATA_HOME:-$HOME/.local/share}/git-hooks/commit-msg-reject.log"
+reject() {
+    mkdir -p "$(dirname "$reject_log")"
+    printf '%s\t%s\t%s\t%s\n' \
+        "$(date -Iseconds)" "$(basename "$PWD")" "$1" "${first_line:-}" >> "$reject_log"
+    exit 1
+}
+
+# コメント行と空行を除いた最初の行 (= ヘッダ) を取る。
+# grep が1行も拾えないと exit 1 になり、awk の早期 exit は grep に SIGPIPE を返すので、
+# どちらも pipefail に拾わせない。
+first_line=$(grep -vE '^[[:space:]]*#' "$msg_file" | awk 'NF{print; exit}' || true)
+
+if [[ -z "$first_line" ]]; then
+    echo "ERROR: コミットメッセージが空です。" >&2
+    reject empty
+fi
+
+# Merge / fixup! / squash! / amend! / Revert はチェック対象外
+# amend! は git commit --fixup=amend:<commit> が生成する (git 2.32+)
+case "$first_line" in
+    Merge\ *|fixup!*|squash!*|amend!*|Revert\ *)
+        exit 0
+        ;;
+esac
+
+types='feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert'
+header_re="^(${types})(\([^)]+\))?!?: .+"
+
+if [[ ! "$first_line" =~ $header_re ]]; then
+    cat >&2 <<EOF
+ERROR: コミットメッセージが Conventional Commits 形式ではありません。
+
+  形式: <type>(<scope>): <subject>
+  type:  ${types}
+
+  例:
+    feat(parser): add array parsing
+    fix: handle null pointer
+    docs(readme): update install steps
+
+  入力: ${first_line}
+EOF
+    reject format
+fi
+
+subject="${first_line#*: }"
+
+# ${#var} は文字数カウントなので、日本語の subject は実質的に緩くなる。
+if (( ${#subject} > 72 )); then
+    echo "ERROR: subject が 72 文字を超えています (${#subject} 文字): ${subject}" >&2
+    reject subject_too_long
+fi
+
+if (( ${#first_line} > 100 )); then
+    echo "ERROR: ヘッダ行が 100 文字を超えています (${#first_line} 文字)" >&2
+    reject header_too_long
+fi

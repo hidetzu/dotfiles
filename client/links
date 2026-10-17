@@ -1,0 +1,6 @@
+# 手元の端末（devhost へ繋ぎに行く側）
+client/config/wezterm                .config/wezterm
+# devhost のプロジェクトを開く (nvim / VS Code Remote SSH)
+client/bin/dev                       .local/bin/dev
+# devhost の mux 用 wezterm と同じビルドか確かめる
+client/bin/wezterm-match             .local/bin/wezterm-match

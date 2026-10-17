@@ -1,0 +1,20 @@
+{
+  // 手元の VS Code は Remote SSH で devhost に繋ぐ GUI。言語ごとの設定は devhost 側 (Remote の設定) かリポジトリに置く
+  "remote.SSH.remotePlatform": {
+    "arch": "linux"
+  },
+  "remote.SSH.showLoginTerminal": true,
+
+  "window.zoomLevel": 2,
+  "workbench.colorTheme": "Tokyo City",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.pinnedTabSizing": "shrink",
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "editor.fontFamily": "'FiraCode Nerd Font', 'PlemolJP Console NF', monospace",
+  "editor.fontLigatures": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "chat.disableAIFeatures": true
+}

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# プロジェクト名から、devhost 上の絶対パスを返す。
+#
+#   project-path <名前>   名前で探す（末尾が一致するもの。acme/api のように途中から書いてもよい）
+#   project-path          fzf で選ぶ
+#   project-path --list   候補を全部出す（client の dev が ssh 越しに読む）
+#
+# 候補は $PROJECT_ROOTS（既定: ~/work ~/repos）の下 3 階層までの git リポジトリと、$HOME 直下の git リポジトリ。
+set -euo pipefail
+
+list() {
+    local root
+    for root in ${PROJECT_ROOTS:-$HOME/work $HOME/repos}; do
+        [ -d "$root" ] || continue
+        # 読めないディレクトリがあると find は 1 で終わる。見つかった分は使う
+        find "$root" -mindepth 2 -maxdepth 4 -name .git -prune -print 2>/dev/null || true
+    done
+    find "$HOME" -mindepth 2 -maxdepth 2 -name .git -prune -print 2>/dev/null || true
+}
+
+candidates() {
+    list | sed 's|/\.git$||' | sort -u
+}
+
+pick() {
+    if [ ! -t 0 ] || ! command -v fzf >/dev/null; then
+        echo "project-path: 候補が 1 つに絞れません:" >&2
+        cat >&2
+        return 1
+    fi
+    fzf --query "${1:-}" --select-1 --exit-0
+}
+
+case "${1:-}" in
+    --list) candidates; exit ;;
+    -h|--help) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; exit ;;
+    "") candidates | pick; exit ;;
+esac
+
+name=${1%/}
+# 末尾が名前と一致するもの、無ければ名前を含むもの
+matches=$(candidates | grep -E "/${name//./\\.}$" || candidates | grep -F -- "$name" || true)
+if [ -z "$matches" ]; then
+    echo "project-path: 見つかりません: $name" >&2
+    exit 1
+fi
+if [ "$(printf '%s\n' "$matches" | wc -l)" -eq 1 ]; then
+    printf '%s\n' "$matches"
+else
+    printf '%s\n' "$matches" | pick "$name"
+fi

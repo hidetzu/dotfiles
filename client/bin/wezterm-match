@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# client の wezterm と、devhost の mux 用 wezterm（wezterm-mux）が同じビルドか確かめる。
+# SSHMUX ドメインはビルドが違うと繋がらない。
+#
+#   wezterm-match [host]   既定: $DEV_HOST（無ければ arch）
+set -euo pipefail
+
+host=${1:-${DEV_HOST:-arch}}
+local_v=$(wezterm --version | cut -d' ' -f2)
+remote_v=$(ssh "$host" '~/.local/bin/wezterm-mux --version' 2>/dev/null | cut -d' ' -f2 || true)
+
+echo "client: $local_v"
+echo "$host: ${remote_v:-(not installed)}"
+if [ "$local_v" = "$remote_v" ]; then
+    echo "ok: same build"
+    exit 0
+fi
+
+# nightly は最新しか置かれないので、両方を今の nightly に揃える
+cat >&2 <<EOF
+ビルドが違います。両方を今の nightly に揃えてください:
+  brew upgrade --cask --greedy wezterm@nightly
+  ssh $host "~/.local/bin/wezterm-mux-install \$(wezterm --version | cut -d' ' -f2)"
+EOF
+exit 1
