@@ -67,7 +67,8 @@ config.status_update_interval = 1000
 
 -- devhost への接続 (Host 名は ~/.ssh/config のもの)
 -- SSHMUX: devhost の mux サーバーに繋ぐ。切れてもペインは devhost に残り、attach し直せる。
---         devhost に client と同じビルドの wezterm が要る (wezterm-match で確かめる)
+--         devhost に mux の通信の版 (CODEC_VERSION) が同じ wezterm が要る。版は --version に出ないので、
+--         client と同じビルドに揃えて wezterm-match で確かめる
 -- SSH:    mux を使わない予備 (ビルドが揃わないとき用)。cwd は OSC 7 から env -C で引き継ぐ
 local dev_hosts = { "arch" }
 config.ssh_domains = {}

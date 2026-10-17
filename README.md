@@ -131,7 +131,7 @@ A failing script does not stop the rest. The failures are listed at the end, and
 
 ### Keep the WezTerm builds in step
 
-The mux protocol needs the **same build** on both sides. The client runs `wezterm@nightly`, and the devhost runs the same nightly from `~/.local/opt/wezterm/<version>`:
+SSHMUX connects only when both sides speak the same mux protocol version (`CODEC_VERSION` in WezTerm's `codec/src/lib.rs`). The build string itself is not compared, but `wezterm --version` does not show the protocol version, and a nightly can bump it without notice. So the rule here is the simple one: run the **same build** on both sides. The client runs `wezterm@nightly`, and the devhost runs the same nightly from `~/.local/opt/wezterm/<version>`:
 
 ```sh
 wezterm-match                                   # compare the two builds
@@ -139,7 +139,7 @@ brew upgrade --cask --greedy wezterm@nightly
 ssh arch "~/.local/bin/wezterm-mux-install $(wezterm --version | cut -d' ' -f2)"
 ```
 
-The nightly download only has the latest build, so update both sides together. A mux server that is still running keeps its old build until it stops. If the builds differ, `SSH:arch` (no mux) still works, and `dev` falls back to plain `ssh`.
+The nightly download only has the latest build, so update both sides together. A mux server that is still running keeps its old build until it stops. If the protocol versions differ, attaching fails with "Please install the same version of wezterm on both the client and server!". `wezterm cli` does not run this check, so a CLI that works is not proof that the GUI can attach. `SSH:arch` (no mux) still works, and `dev` falls back to plain `ssh`.
 
 ### Commit messages
 
