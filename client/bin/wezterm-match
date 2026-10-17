@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # client の wezterm と、devhost の mux 用 wezterm（wezterm-mux）が同じビルドか確かめる。
-# SSHMUX ドメインはビルドが違うと繋がらない。
+# SSHMUX が繋がるかを決めるのは mux の通信の版（CODEC_VERSION）だが、--version に出ないので、
+# ビルドが同じかで代わりに確かめる（違っても繋がることはある）。
 #
 #   wezterm-match [host]   既定: $DEV_HOST（無ければ arch）
 set -euo pipefail
