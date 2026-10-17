@@ -7,6 +7,9 @@ set -x XDG_CONFIG_HOME "$HOME/.config"
 set -x LANG ja_JP.UTF-8
 set -x EDITOR nvim
 
+# 起動のたびに出る既定のあいさつを出さない
+set -g fish_greeting
+
 ### キー: vi モードと fzf (ctrl-t / ctrl-r / alt-c) ###
 set -g fish_key_bindings fish_vi_key_bindings
 # キーを張り直すたびに呼ばれるので、vi モードの後に fzf のキーを足す
