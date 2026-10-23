@@ -75,8 +75,29 @@ The leader key is `Ctrl+t`.
 | fish functions | `gcp` (pick commits to cherry-pick), `fm` (cd to `~/memo`), `y` (yazi, then cd) |
 | Neovim | LSP with the built-in keys (`grr` / `gri` / `grn` / `gra` / `gO` / `K`); `gd` and the lists go through fzf-lua |
 | Neovim, continued | format on save (conform.nvim), lint (nvim-lint), completion (nvim-cmp) |
-| Markdown preview | `:MdKite` serves the buffer, Mermaid included, at `127.0.0.1:8421` on the devhost; view it from the Mac through `ssh -N -L 8421:localhost:8421 arch` |
+| Markdown preview | `:MdKite` serves the buffer, Mermaid included, at `127.0.0.1:8421` on the devhost (see below) |
 | Notes | `zemo` opens and syncs notes in the private `~/memo` repository ([zemo](https://github.com/hidetzu/zemo)) |
+
+### Preview Markdown in the Mac browser
+
+`:MdKite` listens on the devhost's loopback only, so forward the port from the Mac. A separate Host keeps the forward off `Host arch`: otherwise every second `ssh arch` (`dev`, `wezterm-match`) warns that 8421 is in use. An example for `~/.ssh/config`:
+
+```sshconfig
+Host arch-md
+  HostName <the devhost's address>
+  User <you>
+  LocalForward 8421 localhost:8421
+  # fail fast if 8421 is already taken on the Mac
+  ExitOnForwardFailure yes
+  # no "connect failed" while :MdKite is not running
+  LogLevel ERROR
+```
+
+```sh
+ssh -fN arch-md               # once; it stays in the background
+# :MdKite in Neovim, then open http://127.0.0.1:8421/
+pkill -f 'ssh -fN arch-md'    # stop the forward
+```
 
 ## Layout
 
