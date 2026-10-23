@@ -227,6 +227,26 @@ return require("lazy").setup({
 		},
 	},
 
+	-- Markdown プレビュー (:MdKite)。devhost の loopback で待ち受けるので、Mac からは ssh -L 8421:localhost:8421 で見る
+	{
+		"selimacerbas/mdkite.nvim",
+		dependencies = { "selimacerbas/kitehost.nvim" },
+		ft = "markdown",
+		config = function()
+			require("mdkite").setup({
+				instance_mode = "takeover",
+				port = 8421,
+				host = "127.0.0.1",
+				open_browser = false,
+				hooks = {
+					on_start = function(url)
+						vim.notify("Preview: " .. url)
+					end,
+				},
+			})
+		end,
+	},
+
 	-- Claude Code 連携
 	{
 		"coder/claudecode.nvim",
