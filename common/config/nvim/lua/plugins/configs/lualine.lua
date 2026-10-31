@@ -7,7 +7,7 @@ local get_lsp_client = function()
 end
 
 require("lualine").setup({
-    options = { theme = "gruvbox" },
+    options = { theme = "nightfly" },
     sections = {
         lualine_a = { "filename" },
         lualine_b = { "branch", "diff", "diagnostics" },
