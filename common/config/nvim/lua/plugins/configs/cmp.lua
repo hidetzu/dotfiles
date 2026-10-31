@@ -22,7 +22,7 @@ cmp.setup({
 		["<C-Space>"] = cmp.mapping.complete(),
 
 		["<C-e>"] = cmp.mapping.close(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<CR>"] = cmp.mapping.confirm({ select = false }), -- 選んでいない候補は確定せず、改行になる
 
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
