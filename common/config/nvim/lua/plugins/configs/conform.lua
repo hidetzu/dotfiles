@@ -2,6 +2,8 @@ require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		html = { "prettier" },
+		json = { "prettier" },
+		jsonc = { "prettier" },
 		yaml = { "prettier" },
 		markdown = { "prettier" },
 		typescript = { "prettier" },

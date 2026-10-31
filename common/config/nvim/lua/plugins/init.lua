@@ -1,5 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
@@ -21,7 +21,7 @@ return require("lazy").setup({
 		lazy = false,
 		priority = 1000,
 	},
-	-- lsp (設定は lua/lsp。mason はフォーマッタ・リンタと、pacman に無いサーバー用)
+	-- lsp (設定は lua/lsp。mason はフォーマッタと、pacman に無いサーバー用)
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -165,16 +165,6 @@ return require("lazy").setup({
 		config = function()
 			require("plugins.configs.conform")
 			require("mason-conform").setup()
-		end,
-	},
-
-	-- linter
-	{
-		"mfussenegger/nvim-lint",
-		dependencies = { "rshkarin/mason-nvim-lint" },
-		config = function()
-			require("plugins.configs.lint")
-			require("mason-nvim-lint").setup()
 		end,
 	},
 
