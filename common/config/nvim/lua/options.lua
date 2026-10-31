@@ -28,7 +28,14 @@ local cmd = vim.cmd
 
 cmd 'filetype plugin indent on'
 
-cmd 'set iskeyword+=-' -- treat dash separated words as a word text object"
+-- ハイフン区切りを 1 単語として扱うのは、識別子にハイフンが入る言語だけ。
+-- 全体に効かせると Go や Zig の `a-b` (引き算) が 1 単語になり、w / e / * が引っかかる。
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "css", "scss", "html", "vue", "yaml" },
+    callback = function()
+        vim.opt_local.iskeyword:append("-")
+    end,
+})
 cmd 'set shortmess+=c' -- Don't pass messages to |ins-completion-menu|.
 cmd 'set sw=4' -- Change the number of space characters inserted for indentation
 --cmd 'set whichwrap+=<,>,[,],h,l'
