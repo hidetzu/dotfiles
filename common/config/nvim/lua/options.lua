@@ -3,7 +3,6 @@ local options = {
     wrap = false, -- Display long lines as just one line
     updatetime = 300, -- CursorHold (LSP のハイライト・診断のポップアップ) までの待ち
     completeopt = 'menu,menuone,noselect',
-    hidden = false, -- Required to keep multiple buffers open multiple buffers
     showmode = false, -- We don't need to see things like -- INSERT -- anymore
     backup = false,
     writebackup = false,

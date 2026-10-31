@@ -74,7 +74,7 @@ The leader key is `Ctrl+t`.
 | fish | vi mode, starship prompt, fzf keys (`ctrl-t` files, `ctrl-r` history, `alt-c` cd) |
 | fish functions | `gcp` (pick commits to cherry-pick), `fm` (cd to `~/memo`), `y` (yazi, then cd) |
 | Neovim | LSP with the built-in keys (`grr` / `gri` / `grn` / `gra` / `gO` / `K`); `gd` and the lists go through fzf-lua |
-| Neovim, continued | format on save (conform.nvim), lint (nvim-lint), completion (nvim-cmp) |
+| Neovim, continued | format on save (conform.nvim), completion (nvim-cmp) |
 | Markdown preview | `:MdKite` serves the buffer, Mermaid included, at `127.0.0.1:8421` on the devhost (see below) |
 | Notes | `zemo` opens and syncs notes in the private `~/memo` repository ([zemo](https://github.com/hidetzu/zemo)) |
 
