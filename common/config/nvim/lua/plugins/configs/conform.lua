@@ -2,10 +2,12 @@ require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		html = { "prettier" },
+		css = { "prettier" },
 		json = { "prettier" },
 		jsonc = { "prettier" },
 		yaml = { "prettier" },
 		markdown = { "prettier" },
+		javascript = { "prettier" },
 		typescript = { "prettier" },
 		vue = { "prettier" },
 		php = { "php_cs_fixer" },
