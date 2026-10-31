@@ -148,7 +148,7 @@ return require("lazy").setup({
 		keys = {
 			{ "<leader>y", "<cmd>Yazi<cr>", mode = { "n", "v" }, desc = "Open yazi at the current file" },
 			{ "<leader>cw", "<cmd>Yazi cwd<cr>", desc = "Open yazi at cwd" },
-			{ "<C-n>", "<cmd>Yazi toggle<cr>", desc = "Toggle/resume yazi" },
+			{ "<leader>Y", "<cmd>Yazi toggle<cr>", desc = "Toggle/resume yazi" },
 		},
 		opts = {
 			open_for_directories = false,
