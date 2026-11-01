@@ -5,7 +5,12 @@ vim.g.maplocalleader = " "
 
 -- カレントディレクトリを移動する
 vim.keymap.set("n", "<leader><leader>", ":<C-u>cd %:h<CR>", { noremap = true })
-vim.keymap.set("n", "<ESC><ESC>", ":nohlsearch<CR>", { noremap = true, silent = true })
+-- <C-l> はウィンドウ移動に使うので、既定の <C-l> (検索ハイライト消去 + diff 更新 + 再描画) は <Esc><Esc> に持たせる
+vim.keymap.set("n", "<ESC><ESC>", function()
+    vim.cmd.nohlsearch()
+    vim.cmd.diffupdate()
+    vim.cmd.redraw({ bang = true })
+end, { noremap = true, silent = true })
 vim.keymap.set("n", "<c-h>", "<cmd>wincmd h<cr>")
 vim.keymap.set("n", "<c-j>", "<cmd>wincmd j<cr>")
 vim.keymap.set("n", "<c-k>", "<cmd>wincmd k<cr>")

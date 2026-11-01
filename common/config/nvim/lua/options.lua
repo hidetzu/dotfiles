@@ -7,7 +7,6 @@ local options = {
     backup = false,
     writebackup = false,
     pumheight = 10, -- Makes popup menu smaller
-    cmdheight = 2, -- More space for displaying messages
     mouse = 'a', -- Enable your mouse
     splitbelow = true, -- Horizontal splits will automatically be below
     termguicolors = true,
@@ -25,8 +24,6 @@ for k, v in pairs(options) do
 end
 
 local cmd = vim.cmd
-
-cmd 'filetype plugin indent on'
 
 -- ハイフン区切りを 1 単語として扱うのは、識別子にハイフンが入る言語だけ。
 -- 全体に効かせると Go や Zig の `a-b` (引き算) が 1 単語になり、w / e / * が引っかかる。

@@ -25,7 +25,7 @@ return require("lazy").setup({
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			{ "williamboman/mason.nvim" },
+			{ "mason-org/mason.nvim" },
 		},
 		config = function()
 			-- mason の bin を PATH に足すので、サーバーを有効にする前に呼ぶ
