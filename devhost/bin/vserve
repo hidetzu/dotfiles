@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# ディレクトリを 127.0.0.1:8000 で配信する。Mac からは fwd の転送越しに http://localhost:8000/ で開く。
+#
+#   vserve DIR
+#
+# ディレクトリの指定は必須（うっかりホーム全体を配信しないため）。待ち受けは 127.0.0.1 に固定する。
+# ポートは $VSERVE_PORT（既定: 8000）。シーク（Range 要求）に応える miniserve か caddy を使う。
+set -euo pipefail
+
+usage() {
+    sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' >&2
+    exit 2
+}
+
+[ $# -eq 1 ] || usage
+dir=$1
+port=${VSERVE_PORT:-8000}
+
+if [ ! -d "$dir" ]; then
+    echo "vserve: ディレクトリがありません: $dir" >&2
+    exit 1
+fi
+dir=$(cd "$dir" && pwd -P)
+
+# ホーム全体やルートは配信しない
+case "$dir" in
+    / | /home | "$HOME")
+        echo "vserve: $dir は広すぎます。動画のあるディレクトリを指定してください" >&2
+        exit 1
+        ;;
+esac
+
+echo "vserve: $dir を http://127.0.0.1:$port/ で配信します（Mac では fwd のあと http://localhost:$port/）"
+if command -v miniserve >/dev/null 2>&1; then
+    exec miniserve --interfaces 127.0.0.1 --port "$port" "$dir"
+elif command -v caddy >/dev/null 2>&1; then
+    exec caddy file-server --listen "127.0.0.1:$port" --root "$dir" --browse
+fi
+echo "vserve: miniserve か caddy が必要です（sudo pacman -S miniserve）" >&2
+exit 1

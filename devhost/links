@@ -5,6 +5,8 @@ devhost/config/gh/config.yml         .config/gh/config.yml
 devhost/config/fish/devhost.fish     .config/fish/devhost.fish
 # プロジェクト名 → 絶対パス（client の dev が ssh 越しに呼ぶ）
 devhost/bin/project-path             .local/bin/project-path
+# ディレクトリを 127.0.0.1:8000 で配信する（client から fwd の転送越しに開く）
+devhost/bin/vserve                   .local/bin/vserve
 # client の WezTerm が SSHMUX で繋ぐ mux サーバー（client と同じビルドを wezterm-mux-install で入れる）
 devhost/bin/wezterm-mux              .local/bin/wezterm-mux
 devhost/bin/wezterm-mux-install      .local/bin/wezterm-mux-install

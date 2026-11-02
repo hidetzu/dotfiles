@@ -75,7 +75,7 @@ The leader key is `Ctrl+t`.
 | fish functions | `gcp` (pick commits to cherry-pick), `fm` (cd to `~/memo`), `y` (yazi, then cd) |
 | Neovim | LSP with the built-in keys (`grr` / `gri` / `grn` / `gra` / `gO` / `K`); `gd` and the lists go through fzf-lua |
 | Neovim, continued | format on save (conform.nvim), completion (nvim-cmp) |
-| Markdown preview | `:MdKite` serves the buffer, Mermaid included, at `127.0.0.1:8421` on the devhost (see below) |
+| Markdown preview | `:MdKite` serves the buffer, Mermaid included, at `127.0.0.1:8421` on the devhost (see "Forward ports") |
 | Notes | `zemo` opens and syncs notes in the private `~/memo` repository ([zemo](https://github.com/hidetzu/zemo)) |
 
 ### Neovim keys
@@ -98,26 +98,51 @@ The Neovim leader is `Space` (not the WezTerm leader above).
 | `<leader>gs` `gr` `gp` `gb` | stage / reset / preview a hunk, blame the line |
 | `<C-n>` `<C-p>` `<CR>` `<Tab>` | completion: next / previous / confirm the selected item / next or snippet jump |
 
-### Preview Markdown in the Mac browser
+### Forward ports from the devhost
 
-`:MdKite` listens on the devhost's loopback only, so forward the port from the Mac. A separate Host keeps the forward off `Host arch`: otherwise every second `ssh arch` (`dev`, `wezterm-match`) warns that 8421 is in use. An example for `~/.ssh/config`:
+Two things on the devhost listen on its loopback only, so the Mac reaches them through an ssh forward: `:MdKite` (Markdown preview, `8421`) and `vserve` (a directory served over HTTP, `8000`). A separate Host keeps the forward off `Host arch`: otherwise every second `ssh arch` (`dev`, `wezterm-match`) warns that the ports are in use. An example for `~/.ssh/config`:
 
 ```sshconfig
-Host arch-md
+Host arch-fwd
   HostName <the devhost's address>
   User <you>
   LocalForward 8421 localhost:8421
-  # fail fast if 8421 is already taken on the Mac
+  LocalForward 8000 localhost:8000
+  # fail fast if a port is already taken on the Mac
   ExitOnForwardFailure yes
-  # no "connect failed" while :MdKite is not running
+  # no "connect failed" while nothing listens on the devhost yet
   LogLevel ERROR
 ```
 
 ```sh
-ssh -fN arch-md               # once; it stays in the background
-# :MdKite in Neovim, then open http://127.0.0.1:8421/
-pkill -f 'ssh -fN arch-md'    # stop the forward
+fwd           # open the forward (does nothing if it is already up)
+fwd status    # up / down for each port
+fwd stop      # close it
 ```
+
+`fwd` uses `Host arch-fwd` and the ports 8421 and 8000. Override them with `FWD_HOST` and `FWD_PORTS`.
+
+### Preview Markdown in the Mac browser
+
+```sh
+fwd
+# :MdKite in Neovim, then open http://127.0.0.1:8421/
+```
+
+### Watch a video on the devhost from the Mac
+
+No download: the Mac plays it over the forward.
+
+```sh
+# on the devhost: serve one directory (a directory argument is required)
+vserve ~/path/to/videos
+
+# on the Mac
+fwd
+open -a IINA http://localhost:8000/clip.mp4    # or: mpv http://localhost:8000/clip.mp4
+```
+
+`vserve` listens on `127.0.0.1` only and refuses `$HOME` and `/`, so what it serves is reachable only through the ssh forward. It uses `miniserve` (or `caddy`), which answer range requests, so seeking works. A browser and QuickTime need H.264 / AAC; IINA and mpv play almost anything.
 
 ## Layout
 
