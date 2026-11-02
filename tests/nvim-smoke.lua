@@ -11,8 +11,9 @@ vim.wait(3000, function()
     return false
 end, 100)
 
--- 設定の読み込み中に起きた Lua エラーは v:errmsg に残る
-if vim.v.errmsg ~= "" then
+-- 設定の読み込み中に起きた Lua エラーは v:errmsg に残る。
+-- mason がツール (prettier など) を入れられなかった通知は、取得先の都合 (CI には npm が無い) なので除外する
+if vim.v.errmsg ~= "" and not vim.v.errmsg:match("^%[mason") then
     fail("v:errmsg: " .. vim.v.errmsg)
 end
 
