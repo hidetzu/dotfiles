@@ -22,7 +22,7 @@ Panes live on the devhost, so they survive a disconnect, and a split opens in th
 
 | Role | Machine | Responsibility |
 |---|---|---|
-| `client` | macOS | WezTerm, `dev` (project launcher), VS Code Remote SSH settings, Brewfile, macOS defaults |
+| `client` | macOS | WezTerm, `dev` (project launcher), `fwd` (ssh port forwards), VS Code Remote SSH settings, Brewfile, macOS defaults |
 | `devhost` | Arch Linux | source code, Neovim LSP servers, WezTerm mux server, Claude Code / Codex, pacman packages |
 | `common` | both | git config and hooks, fish, starship, Neovim config |
 
@@ -148,8 +148,8 @@ open -a IINA http://localhost:8000/clip.mp4    # or: mpv http://localhost:8000/c
 
 ```text
 common/   always       nvim, fish, starship, git (config, hooks, ignore)
-client/   the client   WezTerm, dev, wezterm-match; macOS: Brewfile, defaults, VS Code
-devhost/  the devhost  project-path, WezTerm mux server, Claude Code, gh, Go / mise, packages
+client/   the client   WezTerm, dev, fwd, wezterm-match; macOS: Brewfile, defaults, VS Code
+devhost/  the devhost  project-path, vserve, WezTerm mux server, Claude Code, gh, Go / mise, packages
 lib/dotfiles.sh        deploy / check / init / list
 ```
 
