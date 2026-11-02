@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# devhost への ssh 転送（MdKite の 8421、vserve の 8000）を張る・止める・確かめる。
+#
+#   fwd [up]      転送を張る（すでに張ってあれば何もしない）
+#   fwd stop      止める
+#   fwd status    ポートごとの状態を出す
+#
+# 繋ぐ先は $FWD_HOST（既定: arch-fwd。~/.ssh/config の Host 名で、LocalForward を書いておく）。
+# 見るポートは $FWD_PORTS（既定: 8421 8000）。
+set -euo pipefail
+
+host=${FWD_HOST:-arch-fwd}
+read -r -a ports <<<"${FWD_PORTS:-8421 8000}"
+
+# このポートを手元で待ち受けているか（macOS は lsof、Linux は ss）
+listening() {
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -nP -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1
+    else
+        ss -ltn "sport = :$1" 2>/dev/null | grep -q LISTEN
+    fi
+}
+
+status() {
+    local rc=0
+    for p in "${ports[@]}"; do
+        if listening "$p"; then
+            echo "up   $p"
+        else
+            echo "down $p"
+            rc=1
+        fi
+    done
+    return "$rc"
+}
+
+case "${1:-up}" in
+    up)
+        up=0
+        for p in "${ports[@]}"; do
+            if listening "$p"; then up=$((up + 1)); fi
+        done
+        if [ "$up" -eq "${#ports[@]}" ]; then
+            echo "fwd: すでに張ってあります"
+            exit 0
+        fi
+        if [ "$up" -gt 0 ]; then
+            # 一部だけ使用中。ssh を張ると ExitOnForwardFailure で失敗するので、先に知らせる
+            echo "fwd: 一部のポートがすでに使われています。状態:" >&2
+            status >&2 || true
+            exit 1
+        fi
+        ssh -fN "$host"
+        echo "fwd: $host を張りました (${ports[*]})"
+        ;;
+    stop)
+        if pkill -f -- "^ssh -fN $host\$"; then
+            echo "fwd: 止めました"
+        else
+            echo "fwd: 張っていません"
+        fi
+        ;;
+    status)
+        status
+        ;;
+    *)
+        sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+        exit 2
+        ;;
+esac
