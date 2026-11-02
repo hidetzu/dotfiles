@@ -78,6 +78,26 @@ The leader key is `Ctrl+t`.
 | Markdown preview | `:MdKite` serves the buffer, Mermaid included, at `127.0.0.1:8421` on the devhost (see below) |
 | Notes | `zemo` opens and syncs notes in the private `~/memo` repository ([zemo](https://github.com/hidetzu/zemo)) |
 
+### Neovim keys
+
+The Neovim leader is `Space` (not the WezTerm leader above).
+
+| Key | Action |
+|---|---|
+| `<C-h/j/k/l>` | move between windows |
+| `<Esc><Esc>` | clear the search highlight and redraw |
+| `<leader>e` / `b` / `o` / `q` | fzf-lua: files / buffers / recent files / quickfix |
+| `<leader>fgg` | fzf-lua: live grep |
+| `<leader>fga` / `fgs` / `fgb` / `fgc` / `fgl` | fzf-lua: git files / status / branches / commits / this file's commits |
+| `<leader>fld` / `flw` / `fla` / `fls` | fzf-lua: diagnostics (buffer / workspace) / code actions / workspace symbols |
+| `gd` `grr` `gri` `grt` `gO` | go to definition, references, implementations, type definition, symbols (fzf-lua lists) |
+| `grn` `gra` `K` | rename, code action, hover (Neovim defaults) |
+| `<leader>th` | toggle inlay hints in this buffer |
+| `<leader>y` / `cw` / `Y` | yazi: at the current file / at the cwd / resume the last session (`q` closes it) |
+| `]c` `[c` | next / previous git hunk |
+| `<leader>gs` `gr` `gp` `gb` | stage / reset / preview a hunk, blame the line |
+| `<C-n>` `<C-p>` `<CR>` `<Tab>` | completion: next / previous / confirm the selected item / next or snippet jump |
+
 ### Preview Markdown in the Mac browser
 
 `:MdKite` listens on the devhost's loopback only, so forward the port from the Mac. A separate Host keeps the forward off `Host arch`: otherwise every second `ssh arch` (`dev`, `wezterm-match`) warns that 8421 is in use. An example for `~/.ssh/config`:

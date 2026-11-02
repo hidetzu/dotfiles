@@ -75,3 +75,8 @@ jobs:
       - run: make init ROLE=devhost
       - run: make deploy ROLE=devhost
       - run: make check ROLE=devhost
+      # nvim が設定を読み込んでエラーなく起動できるか。プラグインを取得してから、tests/nvim-smoke.lua で確かめる
+      - name: nvim starts without errors
+        run: |
+          nvim --headless "+Lazy! sync" +qa
+          nvim --headless -c "luafile tests/nvim-smoke.lua"
