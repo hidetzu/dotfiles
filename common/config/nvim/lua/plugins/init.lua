@@ -164,7 +164,13 @@ return require("lazy").setup({
 		dependencies = { "zapling/mason-conform.nvim" },
 		config = function()
 			require("plugins.configs.conform")
-			require("mason-conform").setup()
+			-- mason-conform はレジストリが空だと nil を index して落ちるので、引けるときだけ呼ぶ
+			local registry = require("mason-registry")
+			registry.refresh(vim.schedule_wrap(function()
+				if registry.has_package("stylua") then
+					require("mason-conform").setup()
+				end
+			end))
 		end,
 	},
 
