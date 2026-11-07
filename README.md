@@ -24,7 +24,7 @@ Panes live on the devhost, so they survive a disconnect, and a split opens in th
 |---|---|---|
 | `client` | macOS | WezTerm, `dev` (project launcher), `fwd` (ssh port forwards), VS Code Remote SSH settings, Brewfile, macOS defaults |
 | `devhost` | Arch Linux | source code, Neovim LSP servers, WezTerm mux server, Claude Code / Codex, pacman packages |
-| `desktop` | Arch Linux used directly, at its own screen | its own WezTerm config, the HHKB service for a MacBook's internal keyboard, MacBook trackpad settings |
+| `desktop` | Arch Linux used directly, at its own screen | its own WezTerm config, MacBook trackpad settings |
 | `common` | all | git config and hooks, fish, starship, Neovim config |
 
 ## Verified by CI
@@ -148,13 +148,16 @@ open -a IINA http://localhost:8000/clip.mp4    # or: mpv http://localhost:8000/c
 
 ### Turn off a MacBook's internal keyboard while the HHKB is connected
 
-For a MacBook running KDE Plasma on Wayland, with the HHKB placed on top of the internal keyboard. This is part of the `desktop` role. `make deploy` only links the service, so enable it on the machines that need it:
+For a MacBook running KDE Plasma on Wayland, with the HHKB placed on top of the internal keyboard. This is done by `lapkbd`, a separate tool that is not part of this repository. Set it up on the machines that need it:
 
 ```sh
-systemctl --user enable --now hhkb-internal-kbd.service
+lapkbd init
+lapkbd install-service
+systemctl --user daemon-reload
+systemctl --user enable --now lapkbd.service
 ```
 
-Only a Bluetooth connection counts: over USB the HHKB has a different name, so the internal keyboard stays on. The internal keyboard comes back when the HHKB disconnects or the service stops. The trackpad stays on. It works through KWin, so the SDDM login screen is not covered.
+`lapkbd status` shows the current state. It works through KWin, so the SDDM login screen is not covered.
 
 ### Set up a MacBook's trackpad
 
@@ -166,7 +169,7 @@ For a MacBook running KDE Plasma. `make deploy` with the `desktop` role writes t
 common/   always       nvim, fish, starship, git (config, hooks, ignore)
 client/   the client   WezTerm, dev, fwd, wezterm-match; macOS: Brewfile, defaults, VS Code
 devhost/  the devhost  project-path, vserve, WezTerm mux server, Claude Code, gh, Go / mise, packages
-desktop/  local Arch   WezTerm, HHKB service, trackpad settings
+desktop/  local Arch   WezTerm, trackpad settings
 lib/dotfiles.sh        deploy / check / init / list
 ```
 
