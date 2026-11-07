@@ -2,8 +2,9 @@
 # HHKB を繋いでいる間だけ、MacBook の内蔵キーボードを無効にする (KDE Plasma の Wayland 用)。
 #
 # 内蔵キーボードとトラックパッドは同じ名前なので kcminputrc のグループも同じで、
-# KWin はそこへ Enabled を保存する。トラックパッドを必ずキーボードの後に設定して
-# 保存値を true で終わらせる。こうすると、このサービスが動かなくても次の KWin は両方有効で始まる。
+# KWin はそこへ Enabled を保存する。キーボードを無効にした後で保存値を true に書き直す。
+# こうすると、このサービスが動かなくても次の KWin は両方有効で始まる。
+# トラックパッドの enabled を切り替えるとタッチが切れるので、値が違うときしか触らない。
 
 readonly HHKB_NAME='HHKB-Hybrid_1 Keyboard'
 readonly INTERNAL_NAME='Apple Inc. Apple Internal Keyboard / Trackpad'
@@ -16,7 +17,9 @@ prop() {
 }
 
 set_enabled() {
-    busctl --user set-property "$SERVICE" "$ROOT/$1" "$IFACE" enabled b "$2"
+    if [[ $(prop "$1" enabled) != "b $2" ]]; then
+        busctl --user set-property "$SERVICE" "$ROOT/$1" "$IFACE" enabled b "$2"
+    fi
 }
 
 devices() {
@@ -24,12 +27,25 @@ devices() {
         devicesSysNames 2>/dev/null | grep -o '"[^"]*"' | tr -d '"'
 }
 
+# KWin が保存した Enabled=false を、次の起動に残さない
+save_enabled_true() {
+    local vendor product
+    vendor=$(prop "$1" vendor)
+    product=$(prop "$1" product)
+    kwriteconfig6 --file kcminputrc \
+        --group Libinput --group "${vendor#u }" --group "${product#u }" \
+        --group "$INTERNAL_NAME" --key Enabled true
+}
+
 reconcile() {
-    local dev name hhkb=false keyboards=() trackpads=()
+    local dev name hhkb=false keyboards=() trackpads=() missing=()
 
     while read -r dev; do
         name=$(prop "$dev" name)
         case "$name" in
+            '')
+                missing+=("$dev")
+                ;;
             "s \"$HHKB_NAME\"")
                 hhkb=true
                 ;;
@@ -46,15 +62,27 @@ reconcile() {
     local want=true
     [[ $hhkb == true ]] && want=false
 
+    local actual=()
     for dev in "${keyboards[@]}"; do
         set_enabled "$dev" "$want"
+        actual+=("$dev:$(prop "$dev" enabled)")
     done
     for dev in "${trackpads[@]}"; do
-        # 値が同じだと保存されない場合に備えて、一度変えて必ず書かせる
-        set_enabled "$dev" false
         set_enabled "$dev" true
     done
-    echo "hhkb=$hhkb internal-keyboard-enabled=$want"
+    for dev in "${keyboards[@]}" "${trackpads[@]}"; do
+        save_enabled_true "$dev"
+        break
+    done
+
+    # 望んだ値ではなく、KWin から読み直した値を出す
+    echo "hhkb=$hhkb want-internal-keyboard=$want actual=${actual[*]:-none}"
+    if [[ ${#keyboards[@]} -eq 0 ]]; then
+        echo "warning: internal keyboard not found on D-Bus" >&2
+    fi
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        echo "warning: listed by KWin but no D-Bus object: ${missing[*]}" >&2
+    fi
 }
 
 restore() {
@@ -68,12 +96,12 @@ restore() {
 
 trap 'restore; exit 0' TERM INT
 
-# シグナルのたびに状態を合わせる。dbus-monitor 自身の開始シグナルも含むので、起動時にも一度走る。
-# KWin がデバイス一覧を更新し終えるのを 1 秒待つ。
+# 信号が 1 秒途切れるのを待って、一度だけ状態を合わせる。スリープ復帰では信号がまとめて来る。
+# dbus-monitor 自身の開始シグナルも含むので、起動時にも一度走る。
 while read -r line; do
     case "$line" in
         signal*)
-            sleep 1
+            while read -r -t 1 line; do :; done
             reconcile
             ;;
     esac

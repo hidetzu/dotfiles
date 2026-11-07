@@ -154,7 +154,7 @@ For a MacBook running KDE Plasma on Wayland, with the HHKB placed on top of the 
 systemctl --user enable --now hhkb-internal-kbd.service
 ```
 
-The internal keyboard comes back when the HHKB disconnects or the service stops. The trackpad stays on. It works through KWin, so the SDDM login screen is not covered.
+Only a Bluetooth connection counts: over USB the HHKB has a different name, so the internal keyboard stays on. The internal keyboard comes back when the HHKB disconnects or the service stops. The trackpad stays on. It works through KWin, so the SDDM login screen is not covered.
 
 ### Set up a MacBook's trackpad
 
