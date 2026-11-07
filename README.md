@@ -24,7 +24,7 @@ Panes live on the devhost, so they survive a disconnect, and a split opens in th
 |---|---|---|
 | `client` | macOS | WezTerm, `dev` (project launcher), `fwd` (ssh port forwards), VS Code Remote SSH settings, Brewfile, macOS defaults |
 | `devhost` | Arch Linux | source code, Neovim LSP servers, WezTerm mux server, Claude Code / Codex, pacman packages |
-| `desktop` | Arch Linux used directly, at its own screen | the HHKB service for a MacBook's internal keyboard |
+| `desktop` | Arch Linux used directly, at its own screen | its own WezTerm config, the HHKB service for a MacBook's internal keyboard |
 | `common` | all | git config and hooks, fish, starship, Neovim config |
 
 ## Verified by CI
@@ -162,7 +162,7 @@ The internal keyboard comes back when the HHKB disconnects or the service stops.
 common/   always       nvim, fish, starship, git (config, hooks, ignore)
 client/   the client   WezTerm, dev, fwd, wezterm-match; macOS: Brewfile, defaults, VS Code
 devhost/  the devhost  project-path, vserve, WezTerm mux server, Claude Code, gh, Go / mise, packages
-desktop/  local Arch   HHKB service
+desktop/  local Arch   WezTerm, HHKB service
 lib/dotfiles.sh        deploy / check / init / list
 ```
 
