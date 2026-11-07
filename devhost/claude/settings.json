@@ -33,7 +33,8 @@
     ]
   },
   "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
   },
   "tui": "fullscreen",
   "editorMode": "vim",
