@@ -27,6 +27,10 @@ jobs:
             runs-on: ubuntu-latest
             container: archlinux:latest
             role: devhost
+          - name: arch-devhost-desktop
+            runs-on: ubuntu-latest
+            container: archlinux:latest
+            role: devhost desktop
           - name: macos-client
             runs-on: macos-latest
             container: ''

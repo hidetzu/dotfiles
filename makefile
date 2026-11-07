@@ -1,4 +1,4 @@
-# ROLE: client / devhost（空白区切りで複数可）。省略時は Mac が "client"、Linux が "devhost"。
+# ROLE: client / devhost / desktop（空白区切りで複数可）。省略時は Mac が "client"、Linux が "devhost"。
 ROLE ?=
 
 .PHONY: deploy check init list

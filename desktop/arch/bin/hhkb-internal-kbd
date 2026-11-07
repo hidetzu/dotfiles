@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# HHKB を繋いでいる間だけ、MacBook の内蔵キーボードを無効にする (KDE Plasma の Wayland 用)。
+#
+# 内蔵キーボードとトラックパッドは同じ名前なので kcminputrc のグループも同じで、
+# KWin はそこへ Enabled を保存する。トラックパッドを必ずキーボードの後に設定して
+# 保存値を true で終わらせる。こうすると、このサービスが動かなくても次の KWin は両方有効で始まる。
+
+readonly HHKB_NAME='HHKB-Hybrid_1 Keyboard'
+readonly INTERNAL_NAME='Apple Inc. Apple Internal Keyboard / Trackpad'
+readonly SERVICE=org.kde.KWin
+readonly ROOT=/org/kde/KWin/InputDevice
+readonly IFACE=org.kde.KWin.InputDevice
+
+prop() {
+    busctl --user get-property "$SERVICE" "$ROOT/$1" "$IFACE" "$2" 2>/dev/null
+}
+
+set_enabled() {
+    busctl --user set-property "$SERVICE" "$ROOT/$1" "$IFACE" enabled b "$2"
+}
+
+devices() {
+    busctl --user get-property "$SERVICE" "$ROOT" org.kde.KWin.InputDeviceManager \
+        devicesSysNames 2>/dev/null | grep -o '"[^"]*"' | tr -d '"'
+}
+
+reconcile() {
+    local dev name hhkb=false keyboards=() trackpads=()
+
+    while read -r dev; do
+        name=$(prop "$dev" name)
+        case "$name" in
+            "s \"$HHKB_NAME\"")
+                hhkb=true
+                ;;
+            "s \"$INTERNAL_NAME\"")
+                if [[ $(prop "$dev" touchpad) == 'b true' ]]; then
+                    trackpads+=("$dev")
+                elif [[ $(prop "$dev" alphaNumericKeyboard) == 'b true' ]]; then
+                    keyboards+=("$dev")
+                fi
+                ;;
+        esac
+    done < <(devices)
+
+    local want=true
+    [[ $hhkb == true ]] && want=false
+
+    for dev in "${keyboards[@]}"; do
+        set_enabled "$dev" "$want"
+    done
+    for dev in "${trackpads[@]}"; do
+        # 値が同じだと保存されない場合に備えて、一度変えて必ず書かせる
+        set_enabled "$dev" false
+        set_enabled "$dev" true
+    done
+    echo "hhkb=$hhkb internal-keyboard-enabled=$want"
+}
+
+restore() {
+    local dev
+    while read -r dev; do
+        if [[ $(prop "$dev" name) == "s \"$INTERNAL_NAME\"" ]]; then
+            set_enabled "$dev" true
+        fi
+    done < <(devices)
+}
+
+trap 'restore; exit 0' TERM INT
+
+# シグナルのたびに状態を合わせる。dbus-monitor 自身の開始シグナルも含むので、起動時にも一度走る。
+# KWin がデバイス一覧を更新し終えるのを 1 秒待つ。
+while read -r line; do
+    case "$line" in
+        signal*)
+            sleep 1
+            reconcile
+            ;;
+    esac
+done < <(dbus-monitor --session \
+    "type='signal',interface='org.kde.KWin.InputDeviceManager',member='deviceAdded'" \
+    "type='signal',interface='org.kde.KWin.InputDeviceManager',member='deviceRemoved'")
+
+exit 1
