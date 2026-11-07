@@ -24,7 +24,8 @@ Panes live on the devhost, so they survive a disconnect, and a split opens in th
 |---|---|---|
 | `client` | macOS | WezTerm, `dev` (project launcher), `fwd` (ssh port forwards), VS Code Remote SSH settings, Brewfile, macOS defaults |
 | `devhost` | Arch Linux | source code, Neovim LSP servers, WezTerm mux server, Claude Code / Codex, pacman packages |
-| `common` | both | git config and hooks, fish, starship, Neovim config |
+| `desktop` | Arch Linux used directly, at its own screen | the HHKB service for a MacBook's internal keyboard |
+| `common` | all | git config and hooks, fish, starship, Neovim config |
 
 ## Verified by CI
 
@@ -42,6 +43,7 @@ make check     # verify every link
 
 - `make` needs the Xcode Command Line Tools on macOS (`xcode-select --install`), or `base-devel` on Arch (`sudo pacman -S --needed base-devel`).
 - The role defaults to `client` on macOS and `devhost` on Linux. Override it with `ROLE=…`.
+- `desktop` is never a default. On an Arch machine you also develop on directly, set it once in fish: `set -Ux ROLE "devhost desktop"`.
 - `make list ROLE=devhost` shows what a role would link, on any machine.
 
 ## Daily use
@@ -144,12 +146,23 @@ open -a IINA http://localhost:8000/clip.mp4    # or: mpv http://localhost:8000/c
 
 `vserve` listens on `127.0.0.1` only and refuses `$HOME` and `/`, so what it serves is reachable only through the ssh forward. It uses `miniserve` (or `caddy`), which answer range requests, so seeking works. A browser and QuickTime need H.264 / AAC; IINA and mpv play almost anything.
 
+### Turn off a MacBook's internal keyboard while the HHKB is connected
+
+For a MacBook running KDE Plasma on Wayland, with the HHKB placed on top of the internal keyboard. This is part of the `desktop` role. `make deploy` only links the service, so enable it on the machines that need it:
+
+```sh
+systemctl --user enable --now hhkb-internal-kbd.service
+```
+
+The internal keyboard comes back when the HHKB disconnects or the service stops. The trackpad stays on. It works through KWin, so the SDDM login screen is not covered.
+
 ## Layout
 
 ```text
 common/   always       nvim, fish, starship, git (config, hooks, ignore)
 client/   the client   WezTerm, dev, fwd, wezterm-match; macOS: Brewfile, defaults, VS Code
 devhost/  the devhost  project-path, vserve, WezTerm mux server, Claude Code, gh, Go / mise, packages
+desktop/  local Arch   HHKB service
 lib/dotfiles.sh        deploy / check / init / list
 ```
 

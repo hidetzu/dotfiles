@@ -1,0 +1,12 @@
+[Unit]
+Description=Disable internal keyboard while HHKB is connected
+After=plasma-kwin_wayland.service
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/bin/hhkb-internal-kbd
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

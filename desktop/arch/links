@@ -1,0 +1,3 @@
+# HHKB を繋いでいる間だけ MacBook の内蔵キーボードを無効にする。張るだけでは動かない（機械ごとに enable する）
+desktop/arch/bin/hhkb-internal-kbd                         .local/bin/hhkb-internal-kbd
+desktop/arch/config/systemd/user/hhkb-internal-kbd.service .config/systemd/user/hhkb-internal-kbd.service

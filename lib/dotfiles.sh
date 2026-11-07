@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # dotfiles の deploy / check / init / list。
-# 役割 (client, devhost) と OS で、使う設定の層を選ぶ。common は常に入る。
+# 役割 (client, devhost, desktop) と OS で、使う設定の層を選ぶ。common は常に入る。
 #
 #   usage: lib/dotfiles.sh <deploy|check|init|list> [role...]
 #
@@ -107,7 +107,7 @@ link() {
 # リポジトリの中を指して切れている symlink を消す（ファイルを移した後の残骸）
 prune() {
     local dir l root
-    for dir in "$HOME" "$HOME/.config" "$HOME/.config/fish" "$HOME/.config/git/hooks" "$HOME/.config/gh" "$HOME/.config/wezterm-mux" "$HOME/.claude" "$HOME/.local/bin"; do
+    for dir in "$HOME" "$HOME/.config" "$HOME/.config/fish" "$HOME/.config/git/hooks" "$HOME/.config/gh" "$HOME/.config/wezterm-mux" "$HOME/.config/systemd/user" "$HOME/.claude" "$HOME/.local/bin"; do
         [ -d "$dir" ] || continue
         for l in "$dir"/* "$dir"/.[!.]*; do
             [ -L "$l" ] || continue
@@ -203,8 +203,8 @@ main() {
     local role
     for role in $ROLES; do
         case "$role" in
-            client|devhost) ;;
-            *) echo "unknown role: $role (client, devhost)" >&2; exit 1 ;;
+            client|devhost|desktop) ;;
+            *) echo "unknown role: $role (client, devhost, desktop)" >&2; exit 1 ;;
         esac
     done
     PLATFORMS=$(platforms)
