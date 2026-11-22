@@ -4,7 +4,7 @@
 local M = {}
 
 -- 使うサーバー (入っていないものは起動しない)
-local servers = { "gopls", "lua_ls", "zls", "ts_ls", "pyright" }
+local servers = { "clangd", "gopls", "lua_ls", "zls", "ts_ls", "pyright" }
 
 -- Floating windows (hover / signature_help / diagnostics) のデフォルト枠線
 vim.o.winborder = "rounded"
