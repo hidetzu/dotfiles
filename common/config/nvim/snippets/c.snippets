@@ -1,0 +1,34 @@
+# GNU 拡張の __attribute__ (clangd は C の __attribute__(( の中を補完しないので、ここで補う)
+# どれも "__" で始まるので、"__" と打つと一覧に並ぶ
+snippet __attribute "__attribute__((...))"
+	__attribute__((${1}))
+snippet __packed "__attribute__((packed))"
+	__attribute__((packed))
+snippet __aligned "__attribute__((aligned(n)))"
+	__attribute__((aligned(${1:4})))
+snippet __section "__attribute__((section(\"...\")))"
+	__attribute__((section("${1:.text.boot}")))
+snippet __naked "__attribute__((naked))"
+	__attribute__((naked))
+snippet __noreturn "__attribute__((noreturn))"
+	__attribute__((noreturn))
+snippet __unused "__attribute__((unused))"
+	__attribute__((unused))
+snippet __used "__attribute__((used))"
+	__attribute__((used))
+snippet __weak "__attribute__((weak))"
+	__attribute__((weak))
+snippet __always_inline "__attribute__((always_inline))"
+	__attribute__((always_inline))
+snippet __noinline "__attribute__((noinline))"
+	__attribute__((noinline))
+snippet __interrupt "__attribute__((interrupt))"
+	__attribute__((interrupt${1:("supervisor")}))
+snippet __format "__attribute__((format(printf, fmt, args)))"
+	__attribute__((format(printf, ${1:1}, ${2:2})))
+snippet __constructor "__attribute__((constructor))"
+	__attribute__((constructor))
+snippet __deprecated "__attribute__((deprecated))"
+	__attribute__((deprecated${1:("${2:reason}")}))
+snippet __asm "__asm__ __volatile__(...)"
+	__asm__ __volatile__("${1}" : ${2} : ${3} : ${4:"memory"});
