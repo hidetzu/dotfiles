@@ -1,0 +1,69 @@
+# リンカスクリプト (*.ld, filetype=ld)。LSP が無いので、よく書く形をスニペットで補う
+snippet ENTRY ENTRY(symbol)
+	ENTRY(${1:_start})
+snippet OUTPUT_ARCH OUTPUT_ARCH(arch)
+	OUTPUT_ARCH(${1:riscv})
+snippet SECTIONS SECTIONS { ... }
+	SECTIONS {
+		${0}
+	}
+snippet MEMORY MEMORY { RAM ... }
+	MEMORY {
+		${1:RAM} (${2:rwx}) : ORIGIN = ${3:0x80000000}, LENGTH = ${4:128M}
+	}
+snippet org . = address;
+	. = ${1:0x80000000};
+snippet align . = ALIGN(n);
+	. = ALIGN(${1:16});
+snippet sym symbol = .;
+	${1:name} = .;
+snippet sec 出力セクション .name : { *(.name .name.*) }
+	.${1:name} : {
+		*(.$1 .$1.*)
+	}
+snippet text .text (先頭に置くセクションを KEEP)
+	.text : {
+		KEEP(*(.text.${1:boot}))
+		*(.text .text.*)
+	}
+snippet rodata .rodata (.srodata 込み)
+	.rodata : {
+		. = ALIGN(16);
+		*(.srodata .srodata.*)
+		. = ALIGN(16);
+		*(.rodata .rodata.*)
+	}
+snippet data .data (.sdata 込み)
+	.data : {
+		. = ALIGN(16);
+		*(.sdata .sdata.*)
+		. = ALIGN(16);
+		*(.data .data.*)
+	}
+snippet bss .bss (.sbss 込み、__bss_start / __bss_end つき)
+	.bss : {
+		. = ALIGN(16);
+		__bss_start = .;
+		*(.sbss .sbss.*)
+		. = ALIGN(16);
+		*(.bss .bss.*)
+		. = ALIGN(16);
+		__bss_end = .;
+	}
+snippet stack スタックの領域 (bottom / top)
+	. = ALIGN(16);
+	${1:__stack}_bottom = .;
+	. += ${2:4096};
+	$1_top = .;
+snippet discard /DISCARD/ : { ... }
+	/DISCARD/ : {
+		*(.comment)
+		*(.note .note.*)
+		*(.eh_frame .eh_frame.*)
+	}
+snippet KEEP KEEP(*(section))
+	KEEP(*(${1:.text.boot}))
+snippet PROVIDE PROVIDE(symbol = .);
+	PROVIDE(${1:end} = ${2:.});
+snippet ASSERT ASSERT(cond, message)
+	ASSERT(${1:end <= 0x80400000}, "${2:message}")
